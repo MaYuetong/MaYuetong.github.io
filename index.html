@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yuetong Ma — Spatial Intelligence & AI Systems</title>
+<meta name="description" content="Yuetong Ma — Geopolitical Analyst & GIS Researcher. UN Secretariat (UNOCC/DPO), IAEA, Peking University. Spatial intelligence, AI systems, cartography." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+:root {
+  --black: #1a1a1a;
+  --secondary: #6a6a6a;
+  --secondary2: #a0a0a0;
+  --white: #ffffff;
+  --surface: #fdf5f7;
+  --line: #ede5e8;
+  --nadeshiko: #dc9fb4;
+  --kohbai: #e16b8c;
+  --suoh: #8e354a;
+  --taikoh: #f8c3cd;
+  --ikkonzome: #f4a7b9;
+  --ikkonzome-rgb: 244,167,185;
+  --momo: #f596aa;
+  --kuwazome: #64363c;
+  --kuwazome-mid: #8e3f47;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+user-select: none;
+
+/* ── KEYFRAMES ── */
+@keyframes mapPulse {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.85; }
+  100% { transform: translate(-50%,-50%) scale(3.8); opacity: 0; }
+}
+@keyframes heroNameReveal {
+  0%   { opacity: 0; transform: translateY(40px) scale(0.97); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0)   scale(1);    filter: blur(0); }
+}
+@keyframes heroFadeUp {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lineDraw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes gradientPan {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+
+/* ── REVEAL (scroll) ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+              transform 0.65s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
+              transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+.nav.nav-glass {
+  background: rgba(8, 3, 12, 0.28);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom-color: rgba(255,255,255,0.07);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 400; letter-spacing: 0.01em;
+  color: var(--black); cursor: pointer;
+  transition: color 0.3s;
+}
+.nav.nav-glass .nav-logo { color: rgba(255,255,255,0.92); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-link {
+  font-size: 0.78rem; font-weight: 500; color: var(--secondary);
+  cursor: pointer; transition: color 0.2s;
+  padding-bottom: 2px; border-bottom: 1.5px solid transparent;
+  letter-spacing: 0.01em;
+}
+.nav-link:hover { color: var(--black); }
+.nav-link.active { color: var(--kohbai); border-bottom-color: var(--kohbai); }
+.nav.nav-glass .nav-link { color: rgba(255,255,255,0.52); }
+.nav.nav-glass .nav-link:hover { color: rgba(255,255,255,0.88); }
+.nav.nav-glass .nav-link.active { color: var(--ikkonzome); border-bottom-color: var(--ikkonzome); }
+
+/* ── HERO (full viewport) ── */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+}
+.hero-map-wrap {
+  position: absolute;
+  inset: 0; z-index: 0;
+}
+.hero-map-wrap #places-map {
+  width: 100%; height: 100%;
+}
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(6,2,12,0.68) 0%,
+    rgba(6,2,12,0.28) 38%,
+    rgba(6,2,12,0.22) 62%,
+    rgba(6,2,12,0.72) 100%
+  );
+  pointer-events: none;
+}
+.hero-content {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 7rem 2rem 5rem;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.hero-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ikkonzome); font-weight: 600;
+  margin-bottom: 1.4rem;
+  animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+}
+.hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 300; letter-spacing: -0.02em;
+  color: var(--white); line-height: 0.95;
+  margin-bottom: 1.6rem;
+  animation: heroNameReveal 1.1s cubic-bezier(0.22,1,0.36,1) 0.4s both;
+}
+.hero-name em {
+  font-style: italic;
+  color: var(--ikkonzome);
+}
+.hero-divider {
+  width: 36px; height: 1.5px;
+  background: var(--kohbai);
+  margin: 0 auto 1.6rem;
+  transform-origin: left;
+  animation: lineDraw 0.7s cubic-bezier(0.22,1,0.36,1) 1s both;
+}
+.hero-tagline {
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  color: rgba(255,255,255,0.52);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 1.1s both;
+}
+.hero-cities {
+  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 1.3s both;
+}
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.32); cursor: pointer; pointer-events: auto;
+  animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 1.6s both;
+  transition: color 0.2s;
+}
+.hero-scroll:hover { color: rgba(255,255,255,0.6); }
+.hero-scroll-arrow {
+  animation: scrollBounce 2s ease-in-out infinite;
+  font-size: 1.1rem; line-height: 1;
+}
+
+/* ── PLACES SECTION (below hero) ── */
+.places-section {
+  background: var(--white);
+}
+.places-header {
+  text-align: center;
+  padding: 4.5rem 2rem 0;
+}
+.places-header-eyebrow {
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--secondary); font-weight: 600; margin-bottom: 0.6rem;
+}
+.places-header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 300; color: var(--black); line-height: 1.15;
+  margin-bottom: 0.6rem;
+}
+.places-header-title em { font-style: italic; color: var(--kohbai); }
+.places-header-sub {
+  font-size: 0.85rem; color: var(--secondary2);
+  max-width: 420px; margin: 0 auto;
+}
+
+/* ── SECTION HELPERS ── */
+.section-wrap { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.section-head { text-align: center; margin-bottom: 2.5rem; }
+.section-eyebrow {
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--secondary); font-weight: 600; margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 300; color: var(--black); margin-bottom: 0.4rem;
+}
+.section-sub { font-size: 0.83rem; color: var(--secondary2); }
+
+/* ── FILTER TABS ── */
+.filter-tabs {
+  display: flex; justify-content: center;
+  border-bottom: 1px solid var(--line); margin-bottom: 2.5rem;
+}
+.filter-tab {
+  padding: 0.45rem 1.3rem; font-size: 0.76rem; font-weight: 500;
+  color: var(--secondary2); cursor: pointer; border: none; background: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: all 0.18s; letter-spacing: 0.03em;
+}
+.filter-tab:hover { color: var(--black); }
+.filter-tab.active { color: var(--black); border-bottom-color: var(--black); }
+
+/* ── PLACES GRID ── */
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.4rem;
+}
+.place-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer; overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.35s ease;
+}
+.place-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 18px 42px rgba(100,54,60,0.12),
+              0 0 0 1px rgba(225,107,140,0.12);
+}
+.place-card-img-wrap { position: relative; height: 200px; overflow: hidden; }
+.place-type-badge {
+  position: absolute; top: 0.7rem; left: 0.7rem; z-index: 3;
+  font-size: 0.58rem; letter-spacing: 0.09em; text-transform: uppercase;
+  font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 3px;
+}
+.badge-education { background: var(--taikoh); color: var(--suoh); }
+.badge-work { background: var(--kuwazome); color: #fff; }
+.place-card-info { padding: 0.9rem 1.1rem 1.1rem; border-top: 1px solid var(--line); }
+.place-card-name { font-weight: 600; font-size: 0.95rem; color: var(--black); margin-bottom: 0.2rem; }
+.place-card-meta { font-size: 0.76rem; color: var(--secondary); }
+
+/* ── PHOTO UPLOAD ── */
+.photo-upload-area {
+  width: 100%; height: 100%; position: relative;
+  cursor: pointer; display: block; overflow: hidden;
+}
+.photo-upload-area img { width: 100%; height: 100%; object-fit: cover; }
+.photo-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.18s;
+}
+.photo-placeholder:hover { filter: brightness(0.96); }
+.photo-ph-icon {
+  width: 36px; height: 36px; border: 1.5px solid rgba(160,160,160,0.4);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: rgba(160,160,160,0.6); line-height: 1;
+}
+.photo-ph-text {
+  font-size: 0.62rem; letter-spacing: 0.09em; text-transform: uppercase;
+  color: rgba(160,160,160,0.55); font-weight: 500;
+}
+.photo-change-hint {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.32);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.18s;
+  color: white; font-size: 0.68rem; letter-spacing: 0.09em;
+  text-transform: uppercase; font-weight: 500;
+}
+.photo-upload-area:hover .photo-change-hint { opacity: 1; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem; animation: fadeIn 0.22s ease;
+}
+.modal-card {
+  background: var(--white); max-width: 600px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  border-radius: 14px;
+  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-photo-wrap { position: relative; height: 240px; overflow: hidden; border-radius: 14px 14px 0 0; }
+.modal-overlay-text {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.2rem 1.6rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+  pointer-events: none; z-index: 2;
+}
+.modal-city-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 400; color: white; line-height: 1.05;
+}
+.modal-city-sub { font-size: 0.76rem; color: rgba(255,255,255,0.58); margin-top: 0.2rem; }
+.modal-close {
+  position: absolute; top: 0.8rem; right: 0.8rem; z-index: 4;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  color: white; width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; transition: background 0.18s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.25); }
+.modal-body { padding: 1.7rem 1.9rem; }
+.modal-label {
+  font-size: 0.6rem; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--kohbai); margin-bottom: 0.55rem; font-weight: 600;
+}
+.modal-body p { font-size: 0.88rem; color: var(--secondary); line-height: 1.75; margin-bottom: 1.3rem; }
+
+/* ── LEAFLET TOOLTIP ── */
+.leaflet-tooltip.rich-tooltip {
+  background: rgba(30,8,14,0.97) !important;
+  border: 1px solid rgba(225,107,140,0.45) !important;
+  border-radius: 8px !important; padding: 0 !important;
+  max-width: 290px !important; box-shadow: 0 12px 36px rgba(0,0,0,0.7) !important;
+  white-space: normal !important; pointer-events: none !important;
+}
+.leaflet-tooltip-top.rich-tooltip::before {
+  border-top-color: rgba(225,107,140,0.45) !important;
+}
+.rich-tooltip-inner { padding: 12px 15px 14px; }
+.rt-city {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-weight: 500; color: var(--ikkonzome); margin-bottom: 2px;
+}
+.rt-period {
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 7px;
+}
+.rt-summary { font-size: 0.72rem; line-height: 1.58; color: rgba(255,255,255,0.72); }
+
+/* ── ABOUT PAGE ── */
+.about-hero {
+  padding: 3.5rem 2rem 2rem;
+  text-align: center;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--white) 100%);
+}
+.about-hero-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300; color: var(--black); line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.about-hero-title {
+  font-size: 0.78rem; color: var(--secondary); letter-spacing: 0.08em;
+}
+.about-grid {
+  display: grid; grid-template-columns: 280px 1fr;
+  gap: 4.5rem; align-items: start; margin-bottom: 4rem;
+}
+.about-portrait-wrap {
+  height: 373px; overflow: hidden;
+  border-radius: 10px; border: 1px solid var(--line);
+}
+.about-quote {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 1.22rem; color: var(--black); line-height: 1.65; margin-bottom: 1.1rem;
+}
+.about-divider { width: 28px; height: 1.5px; background: var(--line); margin: 1.1rem 0; }
+.about-text p { font-size: 0.88rem; color: var(--secondary); line-height: 1.8; margin-bottom: 0.9rem; }
+
+/* ── INTERESTS ── */
+.interests-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--line); border-radius: 10px;
+  margin-top: 0.5rem; overflow: hidden;
+}
+.interest-card {
+  padding: 1.4rem 1.2rem;
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transition: background 0.2s;
+}
+.interest-card:hover { background: var(--surface); }
+.interest-card:nth-child(3n) { border-right: none; }
+.interest-card:nth-last-child(-n+3) { border-bottom: none; }
+.interest-icon { font-size: 1.25rem; margin-bottom: 0.45rem; }
+.interest-title { font-weight: 600; font-size: 0.86rem; color: var(--black); margin-bottom: 0.25rem; }
+.interest-desc { font-size: 0.76rem; color: var(--secondary); line-height: 1.52; }
+
+/* ── CURIOSITIES ── */
+.curiosities-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.5rem; }
+.curiosity-item {
+  display: flex; gap: 0.6rem; font-size: 0.85rem; color: var(--secondary);
+  padding: 0.65rem 0; border-bottom: 1px solid var(--line); align-items: flex-start;
+  transition: color 0.18s;
+}
+.curiosity-item:hover { color: var(--black); }
+.curiosity-arrow { color: var(--secondary2); flex-shrink: 0; font-weight: 400; }
+
+/* ── EXPERIENCE PAGE ── */
+.experience-hero {
+  padding: 5rem 2rem 2.5rem;
+  background: linear-gradient(180deg, var(--surface) 60%, var(--white) 100%);
+  text-align: center;
+}
+.experience-hero-eyebrow {
+  font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--secondary); font-weight: 600; margin-bottom: 0.7rem;
+}
+.experience-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 300; color: var(--black); line-height: 1.08; margin-bottom: 0.4rem;
+}
+.experience-hero-title em { font-style: italic; color: var(--kohbai); }
+.experience-wrap { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 128px; top: 0; bottom: 0;
+  width: 1px; background: var(--line);
+}
+.timeline-item {
+  display: grid; grid-template-columns: 140px 1fr;
+  gap: 0 3.5rem; padding-bottom: 2.8rem; position: relative;
+}
+.timeline-year {
+  text-align: left; padding-top: 0.15rem; padding-left: 0.1rem;
+  font-size: 0.7rem; font-weight: 600; color: var(--secondary2); letter-spacing: 0.02em;
+}
+.timeline-dot {
+  position: absolute; left: 148px; top: 0.35rem;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--secondary2);
+  box-shadow: 0 0 0 3px rgba(160,160,160,0.15);
+  transition: box-shadow 0.3s;
+}
+.timeline-item:hover .timeline-dot {
+  box-shadow: 0 0 0 6px rgba(225,107,140,0.14);
+}
+.timeline-content { padding-left: 0.5rem; }
+.timeline-logo-wrap {
+  display: flex; align-items: center; margin-bottom: 0.65rem;
+  height: 34px;
+}
+.timeline-logo {
+  max-height: 30px; max-width: 90px;
+  object-fit: contain; object-position: left center;
+  filter: grayscale(10%); opacity: 0.85;
+  transition: opacity 0.2s, filter 0.2s;
+}
+.timeline-logo.logo-dji { filter: none; opacity: 0.85; }
+.timeline-item:hover .timeline-logo { opacity: 1; filter: grayscale(0%); }
+.timeline-item:hover .timeline-logo.logo-dji { opacity: 1; }
+.timeline-logo-initials {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 28px; padding: 0 10px; border-radius: 5px;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+  color: #fff; opacity: 0.82; transition: opacity 0.2s;
+}
+.timeline-item:hover .timeline-logo-initials { opacity: 1; }
+.timeline-org {
+  font-size: 0.6rem; letter-spacing: 0.11em; text-transform: uppercase;
+  color: var(--secondary2); margin-bottom: 0.22rem; font-weight: 600;
+}
+.timeline-role {
+  font-weight: 600; font-size: 0.97rem; color: var(--black);
+  margin-bottom: 0.22rem; line-height: 1.3;
+}
+.timeline-location { font-size: 0.74rem; color: var(--secondary); margin-bottom: 0.55rem; }
+.timeline-desc { font-size: 0.84rem; color: var(--secondary); line-height: 1.72; margin-bottom: 0.8rem; }
+.timeline-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.timeline-tag {
+  font-size: 0.66rem; padding: 0.14rem 0.55rem;
+  border: 1px solid var(--line); color: var(--secondary);
+  border-radius: 3px; font-weight: 500;
+  transition: border-color 0.18s, color 0.18s;
+}
+.timeline-tag:hover { border-color: var(--secondary2); color: var(--black); }
+
+/* ── PROJECTS PAGE ── */
+.projects-hero {
+  padding: 5rem 2rem 2.5rem; text-align: center;
+  background: linear-gradient(180deg, var(--surface) 60%, var(--white) 100%);
+}
+.projects-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+}
+.project-card {
+  padding: 1.8rem; background: var(--white);
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  transition: background 0.22s, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: default;
+}
+.project-card:hover { background: var(--surface); transform: scale(1.013); }
+.project-type {
+  font-size: 0.6rem; letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--secondary); margin-bottom: 0.55rem; font-weight: 600;
+}
+.project-name {
+  font-weight: 600; font-size: 0.96rem; color: var(--black);
+  margin-bottom: 0.65rem; line-height: 1.3;
+}
+.project-desc { font-size: 0.83rem; color: var(--secondary); line-height: 1.67; margin-bottom: 0.8rem; }
+.project-outcome {
+  font-size: 0.76rem; font-weight: 500; color: var(--black);
+  border-top: 1px solid var(--line); padding-top: 0.7rem;
+  line-height: 1.5; letter-spacing: 0.01em;
+}
+
+/* ── RECOGNITION SECTION ── */
+.recognition-list { margin-top: 1.4rem; display: flex; flex-direction: column; gap: 0; }
+.recognition-row {
+  display: flex; align-items: baseline; gap: 1.2rem;
+  padding: 0.85rem 0; border-bottom: 1px solid var(--line);
+  transition: background 0.18s;
+}
+.recognition-row:first-child { border-top: 1px solid var(--line); }
+.recognition-row-icon { display: none; }
+.recognition-row-title { font-size: 0.88rem; font-weight: 600; color: var(--black); flex: 1; line-height: 1.35; }
+.recognition-row-org { font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--secondary); font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+
+/* ── CONTACT PAGE ── */
+.contact-page {
+  background: linear-gradient(160deg, #1a0912 0%, var(--kuwazome) 40%, #3d1e23 100%);
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+.contact-main { padding: 8rem 2rem 4rem; text-align: center; flex: 1; }
+.contact-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--kohbai); margin-bottom: 1rem; font-weight: 600;
+}
+.contact-h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 300;
+  color: var(--white); margin-bottom: 0.8rem; line-height: 1.05;
+}
+.contact-p { font-size: 0.88rem; color: rgba(255,255,255,0.4); max-width: 380px; margin: 0 auto 2.8rem; }
+.contact-form {
+  max-width: 520px; margin: 0 auto; text-align: left;
+  display: flex; flex-direction: column; gap: 1.1rem;
+}
+.contact-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.contact-field { display: flex; flex-direction: column; gap: 0.38rem; }
+.contact-label {
+  font-size: 0.65rem; letter-spacing: 0.11em; text-transform: uppercase;
+  color: rgba(255,255,255,0.36); font-weight: 600;
+}
+.contact-input, .contact-textarea {
+  background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white); font-family: inherit; font-size: 0.88rem;
+  padding: 0.72rem 0.95rem; border-radius: 6px; outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.contact-input::placeholder, .contact-textarea::placeholder { color: rgba(255,255,255,0.2); }
+.contact-input:focus, .contact-textarea:focus {
+  border-color: rgba(225,107,140,0.55);
+  background: rgba(255,255,255,0.08);
+}
+.contact-textarea { resize: vertical; min-height: 120px; }
+.contact-submit {
+  padding: 0.78rem 2.2rem; background: var(--kohbai);
+  color: var(--white); font-size: 0.8rem; letter-spacing: 0.09em;
+  text-transform: uppercase; font-weight: 600; border: none;
+  border-radius: 6px; cursor: pointer; font-family: inherit;
+  transition: opacity 0.2s, transform 0.2s; align-self: flex-start;
+}
+.contact-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+.contact-submit:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+.contact-success {
+  text-align: center; padding: 2rem;
+  color: rgba(255,255,255,0.72); font-size: 0.93rem; line-height: 1.7;
+}
+.contact-success-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.contact-secondary-links {
+  display: flex; gap: 1.5rem; justify-content: center;
+  margin-top: 2.8rem; flex-wrap: wrap;
+}
+.contact-secondary-link {
+  font-size: 0.73rem; color: rgba(255,255,255,0.28); letter-spacing: 0.07em;
+  transition: color 0.2s;
+}
+.contact-secondary-link:hover { color: rgba(255,255,255,0.65); }
+.contact-langs { margin-top: 2rem; font-size: 0.76rem; color: rgba(255,255,255,0.18); letter-spacing: 0.05em; }
+.contact-footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 1.1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.contact-footer span { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
+
+/* ── LANG TOGGLE & BANNER ── */
+.lang-toggle {
+  background: none; border: 1px solid rgba(255,255,255,0.32); color: rgba(255,255,255,0.72);
+  font-size: 0.7rem; letter-spacing: 0.09em; padding: 0.26rem 0.65rem;
+  border-radius: 4px; cursor: pointer; font-family: inherit; transition: all 0.2s; margin-left: 1rem;
+}
+.lang-toggle:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
+.nav:not(.nav-glass) .lang-toggle { border-color: rgba(0,0,0,0.18); color: var(--secondary); }
+.nav:not(.nav-glass) .lang-toggle:hover { color: var(--black); border-color: var(--black); }
+.lang-banner {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--black); color: #fff; border-radius: 10px;
+  padding: 0.85rem 1.3rem; display: flex; align-items: center; gap: 0.9rem;
+  font-size: 0.79rem; z-index: 9999; box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+  animation: slideUp 0.4s ease both; max-width: calc(100vw - 2rem); flex-wrap: wrap;
+}
+
+/* ── HAMBURGER / MOBILE MENU ── */
+.hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  background: none; border: none; padding: 4px; cursor: pointer; margin-left: 0.8rem;
+}
+.hamburger span {
+  display: block; width: 20px; height: 1.5px; border-radius: 1px;
+  background: currentColor; transition: all 0.25s;
+}
+.nav.nav-glass .hamburger { color: rgba(255,255,255,0.85); }
+.nav:not(.nav-glass) .hamburger { color: var(--black); }
+.mobile-menu {
+  display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+  z-index: 999; background: rgba(253,245,247,0.97); backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-direction: column; padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu-link {
+  font-size: 1.15rem; font-weight: 500; color: var(--black);
+  padding: 1rem 0; border-bottom: 1px solid var(--line);
+  cursor: pointer; letter-spacing: 0.01em;
+}
+.mobile-menu-link:last-of-type { border-bottom: none; }
+.mobile-menu-lang {
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mobile-menu-lang span { font-size: 0.78rem; color: var(--secondary); letter-spacing: 0.04em; }
+.mobile-lang-btn {
+  background: none; border: 1px solid var(--secondary2); color: var(--secondary);
+  font-size: 0.76rem; padding: 0.3rem 0.8rem; border-radius: 4px;
+  font-family: inherit; cursor: pointer; letter-spacing: 0.06em;
+}
+.lang-banner-btn {
+  background: var(--kohbai); color: #fff; border: none;
+  padding: 0.32rem 0.85rem; border-radius: 5px; font-family: inherit;
+  font-size: 0.74rem; cursor: pointer; flex-shrink: 0;
+}
+.lang-banner-dismiss {
+  background: none; border: none; color: rgba(255,255,255,0.38);
+  font-family: inherit; font-size: 0.74rem; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  /* Nav */
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .lang-toggle { display: none; }
+
+  /* Hero */
+  .hero-name { letter-spacing: -0.01em; }
+  .hero-eyebrow { letter-spacing: 0.08em; font-size: 0.58rem; padding: 0 1rem; }
+  .hero-tagline { font-size: 0.82rem; padding: 0 1rem; }
+  .hero-cities { font-size: 0.6rem; letter-spacing: 0.08em; padding: 0 1rem; }
+  .hero-scroll { bottom: 1.5rem; }
+
+  /* Places */
+  .places-header { padding: 3rem 1.3rem 0.5rem; }
+  .places-header-title { font-size: 1.6rem; }
+  .places-header-sub { font-size: 0.8rem; }
+  .section-wrap { padding: 2.5rem 1.3rem; }
+  .filter-tabs { gap: 0.5rem; flex-wrap: wrap; }
+
+  /* Modal */
+  .modal-overlay { padding: 0.5rem; align-items: flex-end; }
+  .modal-card { border-radius: 14px 14px 0 0; max-height: 85vh; }
+  .modal-photo-wrap { height: 180px; }
+  .modal-city-name { font-size: 1.5rem; }
+  .modal-body { padding: 1.3rem 1.4rem; }
+
+  /* About */
+  .about-hero { padding: 5rem 1.5rem 2.5rem; }
+  .about-hero-title { font-size: 0.78rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .about-portrait-wrap { height: 220px; }
+  .about-quote { font-size: 0.9rem; }
+  .about-text p { font-size: 0.84rem; }
+  .interests-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .curiosities-grid { grid-template-columns: 1fr; }
+
+  /* Experience */
+  .experience-wrap { padding: 2.5rem 1.3rem; }
+  .timeline::before { display: none; }
+  .timeline-item { grid-template-columns: 1fr; gap: 0; }
+  .timeline-year { text-align: left; margin-bottom: 0.25rem; }
+  .timeline-dot { display: none; }
+  .timeline-content { padding-left: 0; }
+
+  /* Projects */
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card { border-right: none; }
+
+  /* Contact */
+  .contact-form-row { grid-template-columns: 1fr; }
+  .contact-footer { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+  .contact-main { padding: 5rem 1.5rem 2.5rem; }
+}
+
+@media (max-width: 420px) {
+  .interests-grid { grid-template-columns: 1fr; }
+  .hero-name { font-size: clamp(3.2rem, 16vw, 6rem); }
+  .places-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── SCROLL REVEAL HOOK ── */
+function useScrollReveal(dep) {
+  useEffect(() => {
+    const els = document.querySelectorAll('.reveal, .reveal-left');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+    els.forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [dep]);
+}
+
+/* ── DATA ── */
+const places = [
+  {
+    id: 'beijing', name: 'Beijing', country: 'China',
+    coordinates: [39.9042, 116.4074], years: '2017 – 2024', type: 'education',
+    subtitle: 'Study hub & research base',
+    tooltipSummary: 'PKU MSc Geography (2021–24, GPA 3.74, distinction) · BFU BSc Urban Forestry (2017–21, GPA 91/100) · CIECC Internship (2021) · NTL Resilience Research → EuroCarto 2024 First Prize',
+    memory: 'Beijing is where I spent seven formative years — first studying urban forestry at Beijing Forestry University, then geography and cartography at Peking University. My research on night-time light data and disaster resilience earned First Prize at the European Cartographic Conference 2024.',
+    learned: 'Spatial analysis, cartographic research, machine learning for geographic data (LightGBM, Python), GIS workflows, and interdisciplinary research at the intersection of ecology and geography.',
+    gradient: 'linear-gradient(135deg, #1A2340 0%, #2A3560 100%)'
+  },
+  {
+    id: 'stockholm', name: 'Stockholm', country: 'Sweden',
+    coordinates: [59.3293, 18.0686], years: '2022 – 2023', type: 'education',
+    subtitle: 'Exchange program & remote research',
+    tooltipSummary: 'Stockholm University Exchange (2022–23) · Modules: Human Geography, Globalisation & Strategy · UNESCO WHITRAP Research Assistant (remote) — Climate Change & Heritage Conservation',
+    memory: 'Stockholm introduced me to a European intellectual tradition focused on communication, social geography, and policy. I simultaneously worked remotely for UNESCO WHITRAP on the Metropolitan Heritage Project, studying how climate change affects heritage conservation through interdisciplinary geospatial methods.',
+    learned: 'European approaches to human geography, AI and geospatial methods for heritage conservation, interdisciplinary research combining digitalization and spatial analysis.',
+    gradient: 'linear-gradient(135deg, #1A3040 0%, #2A4060 100%)'
+  },
+  {
+    id: 'vienna', name: 'Vienna', country: 'Austria',
+    coordinates: [48.2082, 16.3738], years: '2024 – 2025', type: 'work',
+    subtitle: 'IAEA Trainee — WebGIS & Data Analysis',
+    tooltipSummary: 'IAEA/FAO Joint Centre, Trainee: WebGIS Developer & Data Analyst (Jan 2024 – Jan 2025) · Built GIS animal health monitoring platform · Maps for IAEA General Conference & annual reports · EuroCarto 2024 First Prize',
+    memory: 'Vienna was my first full international professional posting. At the IAEA/FAO Joint Centre I developed a GIS-based animal health monitoring platform, produced thematic maps for the IAEA General Conference, and delivered GIS training materials for agricultural and veterinary applications.',
+    learned: 'International scientific standards, GIS platform development for institutional use, thematic cartography for policy audiences, zoonotic disease surveillance workflows, working within the UN system.',
+    gradient: 'linear-gradient(135deg, #2A3040 0%, #3A4060 100%)'
+  },
+  {
+    id: 'faisalabad', name: 'Faisalabad', country: 'Pakistan',
+    coordinates: [31.4504, 73.1350], years: 'Aug 2025', type: 'work',
+    subtitle: 'IAEA Regional GIS Training Mission',
+    tooltipSummary: 'IAEA Regional GIS Trainer & Technical Expert (SSA) · Delivered training on open-source geo-visualization for disease monitoring · Participants from Middle East, Africa, SE Asia · IAEA technical documentation prepared',
+    memory: 'My first field training mission — delivering hands-on GIS training to government officials and researchers from across the Middle East, Africa, and Southeast Asia.',
+    learned: 'Cross-cultural technical training design, open-source geo-visualization for vector-borne disease monitoring, IAEA mission standards and documentation.',
+    gradient: 'linear-gradient(135deg, #2A2010 0%, #403020 100%)'
+  },
+  {
+    id: 'nyc', name: 'New York', country: 'United States',
+    coordinates: [40.7128, -74.0060], years: '2025 – 2026', type: 'work',
+    subtitle: 'UN Secretariat — AI & GIS for Peace Operations',
+    tooltipSummary: 'UNOCC Geopolitical Analyst, UN Trainee (Nov 2025 – May 2026) · AI Agent system for geospatial intelligence · Automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks',
+    memory: 'At the UN Secretariat\'s UNOCC I\'m designing AI-powered systems that translate unstructured geopolitical requests into executable GIS tasks — building the bridge between natural language and spatial intelligence at scale.',
+    learned: 'AI agent system design, NLP-to-GIS pipeline architecture, geopolitical analysis, working at the frontier of AI and geographic information systems within the UN system.',
+    gradient: 'linear-gradient(135deg, #162035 0%, #243050 100%)'
+  },
+  {
+    id: 'shenzhen', name: 'Shenzhen', country: 'China',
+    coordinates: [22.5431, 114.0579], years: '2025 – 2026', type: 'work',
+    subtitle: 'DJI Innovation — Product Manager',
+    tooltipSummary: 'DJI Product Manager, Technical Service Solutions (Feb 2025 – Mar 2026) · Service automation 0% → 75% · AI Agent-based service platform · North America logistics optimization: estimated −30% cost reduction',
+    memory: 'DJI is where I brought spatial thinking and systems analysis into a commercial context at scale. Leading automated service workflow design, contributing to an AI Agent service platform, and building multi-objective optimization models for logistics networks.',
+    learned: 'Product management, enterprise systems (CRM/LMS/RMS), AI-human service workflow design, multi-objective logistics optimization, commercial operations at scale.',
+    gradient: 'linear-gradient(135deg, #20202A 0%, #302840 100%)'
+  },
+];
+
+const arcConnections = [
+  ['beijing','stockholm'], ['stockholm','vienna'], ['beijing','vienna'],
+  ['vienna','faisalabad'], ['vienna','nyc'], ['beijing','shenzhen'],
+];
+
+function createArc(from, to, numPoints = 60) {
+  const pts = [];
+  let lngDiff = to[1] - from[1];
+  if (lngDiff > 180) lngDiff -= 360;
+  if (lngDiff < -180) lngDiff += 360;
+  for (let i = 0; i <= numPoints; i++) {
+    const t = i / numPoints;
+    pts.push([from[0] + (to[0]-from[0])*t + Math.sin(Math.PI*t)*10, from[1]+lngDiff*t]);
+  }
+  return pts;
+}
+
+const LOGOS = {
+  un:        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/UN_emblem_blue.svg/120px-UN_emblem_blue.svg.png',
+  dji:       null,
+  iaea:      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/International_Atomic_Energy_Agency_Logo.svg/120px-International_Atomic_Energy_Agency_Logo.svg.png',
+  unesco:    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/UNESCO_logo.svg/120px-UNESCO_logo.svg.png',
+  pku:       'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Peking_University_seal.svg/120px-Peking_University_seal.svg.png',
+  stockholm: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Stockholms_universitet_Coat_of_Arms_old.svg/120px-Stockholms_universitet_Coat_of_Arms_old.svg.png',
+  ciecc:     null,
+  bfu:       null,
+};
+
+// Inline SVG initials for orgs without reliable logo URLs
+const LOGO_INITIALS = {
+  stockholm: { text: 'SU', color: '#002F5F' },  // fallback only
+  bfu:       { text: '北林', color: '#1a5c2a' },
+  ciecc:     { text: 'CIECC', color: '#8e354a' },
+};
+
+const ORG_URLS = {
+  un:        'https://peacekeeping.un.org/',
+  dji:       'https://www.dji.com/',
+  iaea:      'https://www.iaea.org/',
+  unesco:    'https://www.unesco.org/',
+  pku:       'https://www.pku.edu.cn/',
+  stockholm: 'https://www.su.se/',
+  ciecc:     'https://www.ciecc.com.cn/',
+  bfu:       'https://www.bjfu.edu.cn/',
+};
+function OrgLogo({ logoKey, orgName }) {
+  const src = LOGOS[logoKey];
+  const init = LOGO_INITIALS[logoKey];
+  const url = ORG_URLS[logoKey];
+  let inner = null;
+  if (logoKey === 'dji') {
+    inner = (
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+        style={{ height:'22px', width:'auto', display:'block', fill:'#1a1a1a', opacity:0.85 }}>
+        <path d="M19.2 7.8a716.856 716.856 0 0 0-1.232 4.63c-.202.772-.401 1.544-.634 2.308-.226.743-.504 1.535-.91 2.21-.422.703-.969 1.253-1.726 1.604-.3.137-.615.24-.939.306-.46.09-.926.146-1.394.165-1.163.065-3.628.056-4.79.056l.713-2.64c.539 0 1.078.002 1.617-.013.52-.014 1.092-.042 1.605-.163.56-.133.984-.36 1.355-.817.337-.416.564-.935.75-1.424.34-.893.688-2.173.934-3.093.277-1.041.544-2.085.812-3.129zm4.8 0-2.072 7.68h-3.84l2.073-7.68ZM11.339 4.92h3.84c-.403 1.5-.805 2.999-1.212 4.496-.283 1.044-.565 2.088-.872 3.124-.135.452-.269.903-.445 1.342-.141.352-.3.666-.591.93a1.908 1.908 0 0 1-.734.405c-.356.112-.717.154-1.085.184-.53.043-1.06.054-1.591.063-1.991.02-3.983.02-5.974-.001a21.408 21.408 0 0 1-.954-.034 5.319 5.319 0 0 1-.632-.07 1.851 1.851 0 0 1-.412-.119c-.44-.192-.664-.575-.677-1.043 0-.263.032-.525.093-.78.076-.367.171-.728.265-1.09.179-.691.506-1.966.762-2.638.2-.526.464-1.05.966-1.382.28-.186.576-.285.901-.35.241-.05.483-.075.728-.093.41-.03.82-.04 1.23-.047.582-.01 1.165-.013 1.748-.015L8.148 7.8h1.454l-.518 1.92c-.864 0-1.728-.002-2.593.003-.252.001-.504 0-.756.016a.968.968 0 0 0-.264.042c-.113.04-.17.11-.22.213-.073.15-.115.31-.162.468a84.804 84.804 0 0 0-.503 1.857c-.035.14-.07.28-.1.42-.022.099-.04.197-.05.298-.01.11-.014.242.053.345.068.103.182.127.29.143.12.018.241.021.363.025.199.006.398.007.597.008.544.003 1.089.003 1.633 0 .25-.002.501-.004.752-.014.173-.007.343-.013.513-.054.13-.031.23-.08.318-.186.056-.071.1-.15.133-.235.088-.209.15-.425.213-.641.245-.83.466-1.665.692-2.499l.675-2.503.67-2.505h3.84z"/>
+      </svg>
+    );
+  } else if (src) {
+    inner = <img className="timeline-logo" src={src} alt={orgName} loading="lazy" />;
+  } else if (init) {
+    inner = <div className="timeline-logo-initials" style={{ background: init.color }}>{init.text}</div>;
+  }
+  if (!inner) return null;
+  return (
+    <div className="timeline-logo-wrap">
+      {url ? <a href={url} target="_blank" rel="noopener noreferrer" title={orgName} style={{display:'flex',alignItems:'center'}}>{inner}</a> : inner}
+    </div>
+  );
+}
+
+const experiences = [
+  {
+    year: '2025–2026',
+    logoKey: 'un',
+    org: 'UN Secretariat — Dept. of Peace Operations (DPO), UNOCC',
+    role: 'Geopolitical Analyst (UN Trainee)',
+    location: 'New York, USA (Hybrid)',
+    desc: 'Designed an AI Agent-based system to automatically identify geospatial information needs related to peace and political affairs. Developed an automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks.',
+    tags: ['AI Agents', 'GIS Automation', 'Geopolitical Analysis', 'NLP', 'UN System'],
+  },
+  {
+    year: '2025–2026',
+    logoKey: 'dji',
+    org: 'DJI Innovation (Shenzhen DJI Sciences and Technologies Ltd.)',
+    role: 'Product Manager — Technical Service Solutions',
+    location: 'Shenzhen, China',
+    desc: 'Led end-to-end design of an automated service delivery workflow, improving response efficiency by 40% and increasing automation rate from 0% to 75%. Contributed to an AI Agent-based service platform integrating AI customer service and automated damage assessment. Built a multi-objective optimization model for the North America warehouse network (estimated −30% logistics costs).',
+    tags: ['Product Management', 'AI Agents', 'CRM/LMS/RMS', 'Logistics Optimization', 'Automation'],
+  },
+  {
+    year: 'Aug 2025',
+    logoKey: 'iaea',
+    org: 'International Atomic Energy Agency (IAEA)',
+    role: 'Regional GIS Trainer & Technical Expert (SSA)',
+    location: 'Faisalabad, Pakistan',
+    desc: 'Designed and delivered training on open-source geo-visualization tools for vector-borne disease monitoring. Developed materials covering CRS, symbology, heatmaps, buffers, grids, animations and map publishing. Led sessions for government officials and researchers from the Middle East, Africa, and Southeast Asia.',
+    tags: ['GIS Training', 'Open-source Tools', 'Disease Mapping', 'IAEA Standards', 'Technical Documentation'],
+  },
+  {
+    year: '2024–2025',
+    logoKey: 'iaea',
+    org: 'IAEA / FAO Joint Centre',
+    role: 'Trainee — WebGIS Developer & Data Analyst / Project Assistant',
+    location: 'Vienna, Austria',
+    desc: 'Developed a GIS-based animal health monitoring platform enabling data upload, management, and geospatial visualization. Produced thematic maps and visual products for the IAEA General Conference and annual reports. Developed and delivered GIS training materials for agricultural and veterinary applications.',
+    tags: ['WebGIS', 'ArcGIS', 'QGIS', 'Thematic Mapping', 'Zoonotic Disease Surveillance'],
+  },
+  {
+    year: '2022–2023',
+    logoKey: 'unesco',
+    org: 'UNESCO – WHITRAP',
+    role: 'Research Assistant — Climate Change & Heritage Conservation',
+    location: 'Remote (Sweden-based)',
+    desc: 'Contributed to the Metropolitan Heritage Project by assessing climate change impacts on heritage conservation. Conducted interdisciplinary research combining heritage studies, digitalization, and geospatial methods.',
+    tags: ['Heritage Conservation', 'Climate Risk', 'Geospatial Research', 'AI Methods', 'UNESCO'],
+  },
+  {
+    year: '2021–2024',
+    logoKey: 'pku',
+    org: 'Peking University',
+    role: 'MSc in Geography — GPA 3.74/4.0 (with distinction)',
+    location: 'Beijing, China',
+    desc: 'Specializations in WebGIS, machine learning, big data analysis, and quantitative methods. Research lead on regional resilience assessment using NASA Black Marble NTL data — awarded First Prize at European Cartographic Conference 2024. Two SCI Q1 papers under review.',
+    tags: ['GIS', 'Machine Learning', 'Python', 'WebGIS', 'Remote Sensing', 'Research'],
+  },
+  {
+    year: '2022–2023',
+    logoKey: 'stockholm',
+    org: 'Stockholm University',
+    role: 'Exchange Program',
+    location: 'Stockholm, Sweden',
+    desc: 'Modules in Human Geography, Communication, Globalisation and Strategy.',
+    tags: ['Human Geography', 'Globalisation', 'Communication'],
+  },
+  {
+    year: '2021',
+    logoKey: 'ciecc',
+    org: 'China International Engineering Consulting Corporation (CIECC)',
+    role: 'Project Assistant (Internship) — Infrastructure Investment',
+    location: 'Beijing, China',
+    desc: 'Contributed to the feasibility study of the China National Botanical Garden. Supported preparation of the 14th Five-Year Plan for Infrastructure Development in Tongzhou District.',
+    tags: ['Feasibility Studies', 'Policy Analysis', 'Infrastructure Planning'],
+  },
+  {
+    year: '2017–2021',
+    logoKey: 'bfu',
+    org: 'Beijing Forestry University',
+    role: 'BSc in Forestry (Urban Forestry) — GPA 91.22/100 (with distinction)',
+    location: 'Beijing, China',
+    desc: 'Core studies in Urban Ecology, Forest Ecology, Landscape Ecology, Remote Sensing and GIS. Led GVI analysis research along Beijing Central Axis — published in Journal of Chinese Urban Forestry (2020). Awarded RMB 10,000 research funding and Excellent Graduation Thesis.',
+    tags: ['Urban Forestry', 'GIS', 'Remote Sensing', 'Ecology', 'Published Research'],
+  },
+];
+
+const projects = [
+  { type: 'Research · Award', name: 'Regional Resilience & Night-Time Light Data', desc: 'Analysed NASA Black Marble NTL data to assess spatio-temporal resilience during Typhoon Mangkhut. Developed a patented method for dynamic pattern recognition using LightGBM + interpretable AI.', outcome: 'First Prize — European Cartographic Conference 2024 · 2 SCI Q1 papers under review · Patent filed' },
+  { type: 'GIS Platform', name: 'IAEA Animal Health Monitoring Platform', desc: 'GIS-based platform enabling data upload, management, and geospatial visualization for zoonotic disease surveillance. Integrated spatial and temporal datasets at the IAEA/FAO Joint Centre.', outcome: 'Deployed at IAEA/FAO · Supports multi-country disease monitoring workflows' },
+  { type: 'AI + GIS', name: 'AI Agent GIS Pipeline — UNOCC', desc: 'AI Agent system to automatically identify geospatial information needs from unstructured peace operations text. Automated demand–task–operation pipeline converting requests into executable GIS tasks.', outcome: 'Operational at UN Secretariat, New York · Reduces manual analysis time' },
+  { type: 'Product · Operations', name: 'DJI Service Automation & Logistics Optimization', desc: 'Automated service delivery workflow and AI-based damage assessment platform. Multi-objective optimization model for DJI North America warehouse network.', outcome: 'Automation 0% → 75% · Response efficiency +40% · Est. −30% logistics costs' },
+  { type: 'Publication', name: 'Green View Index, Beijing Central Axis', desc: 'Analysed spatial variation of GVI using street view imagery and GIS techniques. Identified key environmental and urban form factors influencing GVI distribution.', outcome: '📄 Journal of Chinese Urban Forestry, 2020, 18(03) · RMB 10,000 research funding' },
+  { type: 'Culture · Craft', name: '缠花 (Chánhuā) — Traditional Chinese Silk Ornaments', desc: 'Handcrafted traditional Chinese wire-wrapped silk flower ornaments. Exploring where Eastern material culture, craft knowledge, and contemporary visual storytelling meet.', outcome: 'Where ancient craft meets modern narrative' },
+];
+
+const recognitions = [
+  { icon: '', title: 'National Scholarship (本科国家奖学金)', org: 'Ministry of Education, China', detail: 'Top 1% nationally — the highest honour for undergraduate students in China\'s state scholarship system. Awarded at Beijing Forestry University.' },
+  { icon: '', title: 'First Prize — European Cartographic Conference 2024', org: 'EuroCarto, Vienna', detail: 'International competitive award for regional disaster resilience research using NASA Black Marble NTL data and LightGBM interpretable AI.' },
+  { icon: '', title: 'IAEA Expert Mission — Regional GIS Training', org: 'IAEA / FAO, Pakistan (Aug 2025)', detail: 'Independently designed and delivered a multi-country expert training for government officials from the Middle East, Africa, and Southeast Asia. End-of-mission report filed to IAEA HQ.' },
+  { icon: '', title: 'Two SCI Q1 Papers Under Review', org: 'International Journals', detail: 'Machine learning and interpretable AI applied to spatio-temporal disaster recovery analysis; non-linear socio-environmental factor identification.' },
+  { icon: '', title: 'PKU Student Affairs Feature — PKUIO Official Account', org: 'Peking University', detail: 'Invited interview by PKU Student Affairs Office on international experience; published on the PKUIO official WeChat account.' },
+];
+
+const interests = [
+  { icon: '◎', title: 'Civilizations', zh_title: '文明', desc: 'How societies form, record themselves, and leave traces — in cities, maps, language, and the objects people carry across time.', zh_desc: '社会如何形成、记录自身，并在城市、地图、语言和人们穿越时间携带的物品中留下痕迹。' },
+  { icon: '◈', title: 'Visual Narrative', zh_title: '视觉叙事', desc: 'Cartography as storytelling: every scale, boundary, and color is a choice about what a civilization decides to remember.', zh_desc: '制图作为叙事：每一个比例尺、边界与色彩，都是关于文明选择记住什么的抉择。' },
+  { icon: '◇', title: 'Human–AI Symbiosis', zh_title: '人机共生', desc: 'How machine intelligence augments spatial reasoning, crisis analysis, and creative work at human scale.', zh_desc: '机器智能如何在人的尺度上增强空间推理、危机分析与创意工作。' },
+  { icon: '◆', title: 'Culture & Craft', zh_title: '文化与手工艺', desc: 'Eastern traditional arts, material culture, and the knowledge that lives in the hands that make things.', zh_desc: '东方传统艺术、物质文化，以及活在制作者双手中的知识。' },
+  { icon: '○', title: 'Stories & Connections', zh_title: '故事与联结', desc: 'The threads connecting people across geography, language, and time — found in data, in place, and in conversation.', zh_desc: '跨越地域、语言与时间，将人们联结在一起的纽带——存在于数据、场所与对话之中。' },
+  { icon: '◉', title: 'Memory & Place', zh_title: '记忆与场所', desc: 'How space encodes history, and what it means for a place to carry the memory of what happened there.', zh_desc: '空间如何编码历史，以及一个地方承载其所发生之事的记忆意味着什么。' },
+];
+
+const curiosities = [
+  { en: 'How do maps shape our understanding of political reality?', zh: '地图如何塑造我们对政治现实的理解？' },
+  { en: 'What makes a civilization legible across centuries?', zh: '是什么让一个文明跨越数百年仍清晰可读？' },
+  { en: 'Can AI systems develop genuine spatial intuition?', zh: 'AI系统能否发展出真正的空间直觉？' },
+  { en: 'The cognitive science of reading and making maps', zh: '读图与制图的认知科学' },
+  { en: 'How craft knowledge transfers across generations', zh: '手工艺知识如何跨代传承' },
+  { en: 'The ethics of geographic representation', zh: '地理表达的伦理' },
+  { en: 'What the future of cartography looks like', zh: '制图学的未来会是什么样' },
+  { en: 'How cities encode their histories in space', zh: '城市如何在空间中编码其历史' },
+  { en: 'How societies respond to disasters — epidemics, natural hazards, and beyond', zh: '如何应对灾害（包括流行病学、自然灾害等）' },
+];
+
+/* ── PhotoUpload ── */
+function PhotoUpload({ storageKey, height, placeholderText = 'Add Photo', style = {} }) {
+  const [src, setSrc] = useState(() => {
+    try { return localStorage.getItem('img_' + storageKey) || null; } catch { return null; }
+  });
+  const inputRef = useRef(null);
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setSrc(ev.target.result);
+      try { localStorage.setItem('img_' + storageKey, ev.target.result); } catch {}
+    };
+    reader.readAsDataURL(file);
+  };
+  return (
+    <div style={{ width:'100%', height: height||'100%', ...style, position:'relative', cursor:'pointer', overflow:'hidden', display:'block' }}
+         onClick={() => inputRef.current?.click()}>
+      {src ? (
+        <>
+          <img src={src} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+          <div className="photo-change-hint">Change Photo</div>
+        </>
+      ) : (
+        <div className="photo-placeholder" style={{ background: style.background || 'var(--surface)' }}>
+          <div className="photo-ph-icon">+</div>
+          <div className="photo-ph-text">{placeholderText}</div>
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} style={{ display:'none' }} />
+    </div>
+  );
+}
+
+/* ── LeafletMap ── */
+function LeafletMap({ onMarkerClick, compact }) {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+
+  useEffect(() => {
+    if (mapInstanceRef.current || !mapRef.current) return;
+
+    const map = L.map(mapRef.current, {
+      center: [32, 20], zoom: compact ? 1.5 : 2,
+      scrollWheelZoom: false, zoomControl: false,
+    });
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap contributors © CARTO',
+      subdomains: 'abcd', maxZoom: 20,
+    }).addTo(map);
+
+    const byId = {};
+    places.forEach(p => { byId[p.id] = p; });
+
+    arcConnections.forEach(([a,b]) => {
+      const pA = byId[a], pB = byId[b];
+      if (!pA || !pB) return;
+      L.polyline(createArc(pA.coordinates, pB.coordinates), {
+        color: 'rgba(244,167,185,0.35)', weight: 1.2,
+        dashArray: '5 8', interactive: false,
+      }).addTo(map);
+    });
+
+    places.forEach(place => {
+      const isWork = place.type === 'work';
+      const color = isWork ? '#E16B8C' : '#DC9FB4';
+      const icon = L.divIcon({
+        className: '',
+        html: `<div style="position:relative;width:28px;height:28px">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;background:${color};border-radius:50%;box-shadow:0 0 10px ${color},0 0 22px rgba(225,107,140,0.35)"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(225,107,140,0.35);animation:mapPulse 2.8s ease-out infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;border:1px solid rgba(225,107,140,0.2);animation:mapPulse 2.8s ease-out 0.9s infinite"></div>
+        </div>`,
+        iconSize: [28, 28], iconAnchor: [14, 14],
+      });
+      const tooltipHtml = `<div class="rich-tooltip-inner">
+        <div class="rt-city">${place.name}</div>
+        <div class="rt-period">${place.years} · ${place.country}</div>
+        <div class="rt-summary">${place.tooltipSummary}</div>
+      </div>`;
+      const marker = L.marker(place.coordinates, { icon }).addTo(map);
+      marker.bindTooltip(tooltipHtml, { className:'rich-tooltip', permanent:false, direction:'top', offset:[0,-18], opacity:1 });
+      marker.on('click', () => onMarkerClick(place));
+    });
+
+    mapInstanceRef.current = map;
+    return () => {
+      if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null; }
+    };
+  }, []);
+
+  return <div ref={mapRef} id="places-map" style={{ width:'100%', height:'100%' }} />;
+}
+
+/* ── PlaceModal ── */
+function PlaceModal({ place, onClose }) {
+  if (!place) return null;
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-card" onClick={e => e.stopPropagation()}>
+        <div className="modal-photo-wrap">
+          <PhotoUpload storageKey={'cover_' + place.id} height={240} placeholderText="Add Cover Photo" style={{ background: place.gradient }} />
+          <button className="modal-close" onClick={onClose}>✕</button>
+          <div className="modal-overlay-text">
+            <div className="modal-city-name">{place.name}, {place.country}</div>
+            <div className="modal-city-sub">{place.years} · {place.subtitle}</div>
+          </div>
+        </div>
+        <div className="modal-body">
+          <div className="modal-label">Memories &amp; Reflections</div>
+          <p>{place.memory}</p>
+          <div className="modal-label">What I Learned There</div>
+          <p style={{ marginBottom: 0 }}>{place.learned}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── PlacesPage ── */
+function PlacesPage({ setPage, lang = 'en' }) {
+  const [selected, setSelected] = useState(null);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const contentRef = useRef(null);
+  const filtered = activeFilter === 'all' ? places : places.filter(p => p.type === activeFilter);
+  useScrollReveal(activeFilter);
+
+  /* Parallax hero text on scroll */
+  useEffect(() => {
+    const content = contentRef.current;
+    const handleScroll = () => {
+      if (!content) return;
+      const y = window.scrollY;
+      content.style.transform = `translateY(${y * 0.38}px)`;
+      content.style.opacity = `${1 - y / 380}`;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollDown = () => {
+    document.getElementById('places-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div style={{ minHeight: '100vh' }}>
+      {/* FULL-VIEWPORT HERO */}
+      <section className="hero">
+        <div className="hero-map-wrap">
+          <LeafletMap onMarkerClick={setSelected} />
+        </div>
+        <div className="hero-overlay" />
+        <div className="hero-content" ref={contentRef}>
+          <div className="hero-eyebrow">{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
+          <h1 className="hero-name">Yuetong<br /><em>Ma</em></h1>
+          <div className="hero-divider" />
+          <p className="hero-tagline">{T[lang].hero.tagline}</p>
+          <div className="hero-cities">New York · Vienna · Faisalabad · Shenzhen · Beijing · Stockholm</div>
+        </div>
+        <div className="hero-scroll" onClick={scrollDown}>
+          <div className="hero-scroll-arrow">↓</div>
+          <span>Explore Journey</span>
+        </div>
+      </section>
+
+      {/* PLACES SECTION */}
+      <div id="places-section" className="places-section">
+        <div className="places-header">
+          <div className="places-header-eyebrow reveal">Spatial CV</div>
+          <h2 className="places-header-title reveal">{T[lang].hero.placesHeader}</h2>
+          <p className="places-header-sub reveal">{T[lang].hero.placesSub}</p>
+        </div>
+
+        <div className="section-wrap" style={{ paddingTop: '2.5rem' }}>
+          <div className="filter-tabs reveal">
+            {['all','education','work'].map(f => (
+              <button key={f} className={'filter-tab' + (activeFilter === f ? ' active' : '')} onClick={() => setActiveFilter(f)}>
+                {f === 'all' ? T[lang].hero.filterAll : f === 'education' ? T[lang].hero.filterEdu : T[lang].hero.filterWork}
+              </button>
+            ))}
+          </div>
+          <div className="places-grid">
+            {filtered.map((place, i) => (
+              <div key={place.id} className="place-card reveal" style={{ transitionDelay: `${i * 0.06}s` }} onClick={() => setSelected(place)}>
+                <div className="place-card-img-wrap">
+                  <div className={'place-type-badge badge-' + place.type}>{place.type}</div>
+                  <PhotoUpload storageKey={place.id} height={200} placeholderText="Add Photo" style={{ background: place.gradient }} />
+                </div>
+                <div className="place-card-info">
+                  <div className="place-card-name">{place.name}, {place.country}</div>
+                  <div className="place-card-meta">{place.years} · {place.subtitle}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {selected && <PlaceModal place={selected} onClose={() => setSelected(null)} />}
+    </div>
+  );
+}
+
+/* ── AboutPage ── */
+function AboutPage({ lang = 'en' }) {
+  useScrollReveal('about');
+  const a = T[lang].about;
+  return (
+    <div style={{ paddingTop: '60px', minHeight: '100vh' }}>
+      <div className="about-hero">
+        <div className="about-hero-name reveal">{lang === 'zh' ? '马玥桐' : 'Yuetong Ma'}</div>
+        <div className="about-hero-title reveal">{a.heroTitle}</div>
+      </div>
+      <div className="section-wrap">
+        <div className="about-grid">
+          <div className="reveal-left">
+            <div className="about-portrait-wrap">
+              <PhotoUpload storageKey="portrait" height={373} placeholderText="Add Portrait" style={{ background: '#F0EDE8' }} />
+            </div>
+          </div>
+          <div className="about-text reveal">
+            <p className="about-quote">"{a.quote}"</p>
+            <div className="about-divider" />
+            <p>{a.p1}</p>
+            <p>{a.p2}</p>
+            <p>{a.p3}</p>
+            {a.p4 && <p>{a.p4}</p>}
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '4rem' }}>
+          <div className="section-eyebrow reveal">{a.interestsEyebrow}</div>
+          <div style={{ fontSize:'1.6rem', fontFamily:"'Cormorant Garamond',serif", fontWeight:300, color:'var(--black)', marginBottom:'1.5rem' }} className="reveal">{a.interestsTitle}</div>
+          <div className="interests-grid">
+            {interests.map((item, i) => (
+              <div key={i} className="interest-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+                <div className="interest-icon">{item.icon}</div>
+                <div className="interest-title">{lang === 'zh' ? item.zh_title : item.title}</div>
+                <div className="interest-desc">{lang === 'zh' ? item.zh_desc : item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="section-eyebrow reveal">{a.curiEyebrow}</div>
+          <div style={{ fontSize:'1.6rem', fontFamily:"'Cormorant Garamond',serif", fontWeight:300, color:'var(--black)', marginBottom:'1.5rem' }} className="reveal">{a.curiTitle}</div>
+          <div className="curiosities-grid">
+            {curiosities.map((q, i) => (
+              <div key={i} className="curiosity-item reveal" style={{ transitionDelay: `${i * 0.05}s` }}>
+                <span className="curiosity-arrow">→</span>
+                <span>{lang === 'zh' ? q.zh : q.en}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ExperiencePage ── */
+function ExperiencePage({ lang = 'en' }) {
+  useScrollReveal('experience');
+  const e = T[lang].experience;
+  return (
+    <div style={{ paddingTop: '60px', minHeight: '100vh' }}>
+      <div className="experience-hero">
+        <div className="experience-hero-eyebrow">{e.eyebrow}</div>
+        <h2 className="experience-hero-title">{e.title}<em>{e.titleEm}</em></h2>
+      </div>
+      <div>
+        <div className="experience-wrap">
+          <div className="timeline">
+            {experiences.map((item, i) => (
+              <div key={i} className="timeline-item reveal-left" style={{ transitionDelay: `${i * 0.07}s` }}>
+                <div className="timeline-year">{item.year}</div>
+                <div className="timeline-dot" />
+                <div className="timeline-content">
+                  {item.logoKey && <OrgLogo logoKey={item.logoKey} orgName={item.org} />}
+                  <div className="timeline-org">{item.org}</div>
+                  <div className="timeline-role">{item.role}</div>
+                  <div className="timeline-location">{item.location}</div>
+                  <div className="timeline-desc">{item.desc}</div>
+                  <div className="timeline-tags">
+                    {item.tags.map((tag, j) => (
+                      <span key={j} className="timeline-tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ProjectsPage ── */
+function ProjectsPage({ lang = 'en' }) {
+  useScrollReveal('projects');
+  const pr = T[lang].projects;
+  return (
+    <div style={{ paddingTop: '60px', minHeight: '100vh' }}>
+      <div className="projects-hero">
+        <div className="section-eyebrow">{pr.eyebrow}</div>
+        <h2 className="section-title">{pr.title}<em style={{fontStyle:'italic',color:'var(--kohbai)'}}>{pr.titleEm}</em></h2>
+        <div className="section-sub">{pr.sub}</div>
+      </div>
+      <div className="section-wrap">
+        <div className="section-eyebrow reveal" style={{ marginBottom:'0.4rem' }}>Honours</div>
+        <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(1.4rem,2.5vw,1.9rem)', fontWeight:300, color:'var(--black)', marginBottom:'0.2rem' }} className="reveal">Selected <em style={{fontStyle:'italic',color:'var(--kohbai)'}}>Recognition</em></div>
+        <div className="recognition-list">
+          {recognitions.map((r, i) => (
+            <div key={i} className="recognition-row reveal" style={{ transitionDelay: `${i * 0.06}s` }}>
+              <div className="recognition-row-icon">{r.icon}</div>
+              <div className="recognition-row-title">{r.title}</div>
+              <div className="recognition-row-org">{r.org}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop:'3.5rem' }}>
+          <div className="section-eyebrow reveal" style={{ marginBottom:'0.4rem' }}>Work</div>
+          <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(1.4rem,2.5vw,1.9rem)', fontWeight:300, color:'var(--black)', marginBottom:'1.4rem' }} className="reveal">Selected <em style={{fontStyle:'italic',color:'var(--kohbai)'}}>Projects</em></div>
+          <div className="projects-grid">
+            {projects.map((p, i) => (
+              <div key={i} className="project-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+                <div className="project-type">{p.type}</div>
+                <div className="project-name">{p.name}</div>
+                <div className="project-desc">{p.desc}</div>
+                {p.outcome && <div className="project-outcome">{p.outcome}</div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ContactPage ── */
+function ContactPage({ lang = 'en' }) {
+  const [status, setStatus] = useState('idle');
+  const [form, setForm] = useState({ name:'', email:'', message:'' });
+  const c = T[lang].contact;
+  const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleSubmit = async (e) => {
+    e.preventDefault(); setStatus('sending');
+    try {
+      const res = await fetch('https://formspree.io/f/xdapgbkw', {
+        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify(form),
+      });
+      if (res.ok) { setStatus('success'); setForm({ name:'', email:'', message:'' }); }
+      else setStatus('error');
+    } catch { setStatus('error'); }
+  };
+  return (
+    <div className="contact-page" style={{ paddingTop: '60px' }}>
+      <div className="contact-main">
+        <div className="contact-eyebrow">{c.eyebrow}</div>
+        <h2 className="contact-h2">{c.h2}</h2>
+        <p className="contact-p">{c.p}</p>
+        {status === 'success' ? (
+          <div className="contact-success">
+            <div className="contact-success-icon">✓</div>
+            <div>{c.success}</div>
+            <div style={{ fontSize:'0.8rem', color:'rgba(255,255,255,0.38)', marginTop:'0.4rem' }}>{c.successSub}</div>
+            <button onClick={() => setStatus('idle')} style={{ marginTop:'1.5rem', background:'none', border:'1px solid rgba(255,255,255,0.14)', color:'rgba(255,255,255,0.45)', padding:'0.5rem 1.3rem', borderRadius:'5px', cursor:'pointer', fontFamily:'inherit', fontSize:'0.76rem', letterSpacing:'0.06em' }}>
+              {c.sendAnother}
+            </button>
+          </div>
+        ) : (
+          <form className="contact-form" onSubmit={handleSubmit}>
+            <div className="contact-form-row">
+              <div className="contact-field">
+                <label className="contact-label">{c.labelName}</label>
+                <input className="contact-input" type="text" name="name" required placeholder={c.phName} value={form.name} onChange={handleChange} />
+              </div>
+              <div className="contact-field">
+                <label className="contact-label">{c.labelEmail}</label>
+                <input className="contact-input" type="email" name="email" required placeholder={c.phEmail} value={form.email} onChange={handleChange} />
+              </div>
+            </div>
+            <div className="contact-field">
+              <label className="contact-label">{c.labelMsg}</label>
+              <textarea className="contact-textarea" name="message" required placeholder={c.phMsg} value={form.message} onChange={handleChange} />
+            </div>
+            {status === 'error' && <div style={{ fontSize:'0.8rem', color:'#DB4444' }}>{c.error}</div>}
+            <button className="contact-submit" type="submit" disabled={status === 'sending'}>
+              {status === 'sending' ? c.sending : c.send}
+            </button>
+          </form>
+        )}
+        <div className="contact-secondary-links">
+          <a href="https://www.linkedin.com/in/yuetong-ma-a2258324b/" target="_blank" rel="noopener" className="contact-secondary-link">LinkedIn ↗</a>
+          <a href="https://arcg.is/j9qHv" target="_blank" rel="noopener" className="contact-secondary-link">Spatial Portfolio ↗</a>
+        </div>
+        <div className="contact-langs">Chinese (Native) · English (Professional) · German (Basic)</div>
+      </div>
+      <div className="contact-footer">
+        <span>Yuetong Ma — GIS Researcher &amp; Geopolitical Analyst</span>
+        <span>New York · Vienna · Shenzhen · 2026</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── LANG DETECTION & TRANSLATIONS ── */
+function detectLang() {
+  const nl = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  return nl.startsWith('zh') ? 'zh' : 'en';
+}
+
+const T = {
+  en: {
+    nav: { places:'Places', about:'About', experience:'Experience', projects:'Projects', contact:'Contact' },
+    langToggle: '中文', banner: 'Your browser is set to Chinese — switch to 中文?', bannerBtn: 'Switch', bannerDismiss: 'Keep English',
+    hero: { eyebrow:'Geopolitical Analyst · GIS Researcher · AI Systems', tagline:'Building spatial intelligence at the intersection of AI, cartography, and crisis response', placesHeader:'My Journey in Places', placesSub:'Six cities across four continents. Hover markers for a summary · click to read the full story.', filterAll:'All', filterEdu:'Education', filterWork:'Work' },
+    about: {
+      heroTitle:'GIS Researcher · Geopolitical Analyst · Product Manager',
+      quote:'A map is never just geography. It is a choice — about what exists, what connects, and what a civilization decides to remember.',
+      p1:"I'm Yuetong Ma — geographer, cartographer, and crisis information analyst. MSc in Geography from Peking University (GPA 3.74, distinction); field experience at the UN Secretariat in New York, IAEA/FAO Joint Centre in Vienna, and UNESCO in Stockholm. For me, every cartographic choice — scale, boundary, color — is an argument about what a civilization decides to remember.",
+      p2:"My research draws on an MSc from Peking University and a BSc from Beijing Forestry University, and orbits two intertwined subjects: disasters and conflict. Disasters — typhoons, zoonotic outbreaks, cascading crises — expose where systems are fragile and where communities endure. Conflict is the other lens: between nations, between peoples, between human activity and the natural world. To understand how the world might become more peaceful and inclusive, you first have to study how and why it breaks. That is where my maps begin.",
+      p3:"Beyond data, I make traditional Chinese 缠花 (chánhuā) silk ornaments — a practice that sharpens how I read both Eastern and European visual traditions, and quietly informs the choices I make at every map.",
+      p4:"",
+      interestsEyebrow:'Interests', interestsTitle:"What Drives Me", curiEyebrow:'Curiosities', curiTitle:"What I'm Curious About",
+    },
+    experience: { eyebrow:'Timeline', title:'Career & ', titleEm:'Education' },
+    projects: { eyebrow:'Selected Work', title:'Research, Platforms & ', titleEm:'Systems', sub:'Research, GIS platforms, AI pipelines, and creative projects' },
+    contact: { eyebrow:'Contact', h2:'Get in touch.', p:"Send me a message — whether it's about maps, collaboration, or just to say hello.", success:'Message sent — thank you!', successSub:"I'll get back to you soon.", sendAnother:'Send another', labelName:'Name', labelEmail:'Email', labelMsg:'Message', phName:'Your name', phEmail:'your@email.com', phMsg:"What's on your mind?", error:'Something went wrong — please try again.', send:'Send Message', sending:'Sending…' },
+  },
+  zh: {
+    nav: { places:'足迹', about:'关于', experience:'经历', projects:'项目', contact:'联系' },
+    langToggle: 'EN', banner: '检测到您使用中文浏览器，是否切换至中文版？', bannerBtn: '切换', bannerDismiss: '保持英文',
+    hero: { eyebrow:'地缘政治分析师 · GIS研究员 · AI系统', tagline:'在人工智能、制图学与危机响应的交汇处，构建空间智能', placesHeader:'我的足迹', placesSub:'跨越四大洲的六座城市。悬停标记查看概览，点击阅读完整故事。', filterAll:'全部', filterEdu:'教育', filterWork:'工作' },
+    about: {
+      heroTitle:'GIS研究员 · 地缘政治分析师 · 产品经理',
+      quote:'地图从来不只是地理。它是一种选择——关于什么存在、什么相连，以及一个文明决定记住什么。',
+      p1:'我是马玥桐——地理学家、制图师与危机信息分析师。北京大学地理学硕士（GPA 3.74，优异毕业），曾就职于纽约联合国秘书处、维也纳IAEA/FAO联合中心及斯德哥尔摩联合国教科文组织。对我而言，每一个制图选择——比例尺、边界、色彩——都是关于文明选择记住什么的论断。',
+      p2:'我的学术积淀来自北京大学地理学硕士与北京林业大学理学学士，研究始终围绕两个彼此交织的主题：灾害与冲突。灾害——台风、人畜共患病疫情、连锁危机——揭示系统的脆弱之处与社区的韧性所在。冲突则是另一面镜子：国家之间、人与人之间、人类活动与自然世界之间的冲突。要理解世界如何才能走向和平与包容，必须先研究它为何以及如何破裂。这正是我的地图开始的地方。',
+      p3:'数据之外，我制作传统缠花丝织饰品——这一实践磨砺了我对东西方视觉传统的感知，也渗透进我每一次制图的选择之中。',
+      p4:'',
+      interestsEyebrow:'兴趣', interestsTitle:'驱动我的力量', curiEyebrow:'思考', curiTitle:'我所好奇的',
+    },
+    experience: { eyebrow:'时间线', title:'职业与', titleEm:'教育经历' },
+    projects: { eyebrow:'精选作品', title:'研究、平台与', titleEm:'系统', sub:'研究项目、GIS平台、AI流水线与创意项目' },
+    contact: { eyebrow:'联系', h2:'与我联系。', p:'发送消息给我——无论是关于地图、合作，还是只是打个招呼。', success:'消息已发送——谢谢！', successSub:'我会尽快回复您。', sendAnother:'再次发送', labelName:'姓名', labelEmail:'邮箱', labelMsg:'内容', phName:'您的姓名', phEmail:'your@email.com', phMsg:'您有什么想说的？', error:'出了点问题——请重试。', send:'发送消息', sending:'发送中…' },
+  },
+};
+
+function LangBanner({ lang, onSwitch, onDismiss }) {
+  return (
+    <div className="lang-banner">
+      <span>{T[lang].banner}</span>
+      <button className="lang-banner-btn" onClick={onSwitch}>{T[lang].bannerBtn}</button>
+      <button className="lang-banner-dismiss" onClick={onDismiss}>{T[lang].bannerDismiss}</button>
+    </div>
+  );
+}
+
+/* ── App ── */
+const navPages = [
+  { id:'places', label:'Places' },
+  { id:'about', label:'About' },
+  { id:'experience', label:'Experience' },
+  { id:'projects', label:'Projects' },
+  { id:'contact', label:'Contact' },
+];
+
+function App() {
+  const [page, setPage] = useState('places');
+  const [navGlass, setNavGlass] = useState(true);
+  const [lang, setLang] = useState('en');
+  const [showBanner, setShowBanner] = useState(() => detectLang() === 'zh');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (page === 'places') {
+        setNavGlass(window.scrollY < window.innerHeight * 0.65);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [page]);
+
+  useEffect(() => {
+    setNavGlass(page === 'places');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMenuOpen(false);
+  }, [page]);
+
+  const toggleLang = () => { setLang(l => l === 'en' ? 'zh' : 'en'); setShowBanner(false); setMenuOpen(false); };
+  const goTo = (id) => { setPage(id); setMenuOpen(false); };
+
+  const renderPage = () => {
+    switch (page) {
+      case 'places':     return <PlacesPage setPage={setPage} lang={lang} />;
+      case 'about':      return <AboutPage lang={lang} />;
+      case 'experience': return <ExperiencePage lang={lang} />;
+      case 'projects':   return <ProjectsPage lang={lang} />;
+      case 'contact':    return <ContactPage lang={lang} />;
+      default:           return <PlacesPage setPage={setPage} lang={lang} />;
+    }
+  };
+
+  return (
+    <>
+      <nav className={'nav' + (navGlass ? ' nav-glass' : '')}>
+        <div className="nav-logo" onClick={() => goTo('places')}>Yuetong Ma</div>
+        <ul className="nav-links">
+          {navPages.map(p => (
+            <li key={p.id} className={'nav-link' + (page === p.id ? ' active' : '')} onClick={() => setPage(p.id)}>
+              {T[lang].nav[p.id]}
+            </li>
+          ))}
+        </ul>
+        <button className="lang-toggle" onClick={toggleLang}>{T[lang].langToggle}</button>
+        <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+          <span /><span /><span />
+        </button>
+      </nav>
+      <div className={'mobile-menu' + (menuOpen ? ' open' : '')}>
+        {navPages.map(p => (
+          <div key={p.id} className="mobile-menu-link" onClick={() => goTo(p.id)}>{T[lang].nav[p.id]}</div>
+        ))}
+        <div className="mobile-menu-lang">
+          <span>{lang === 'zh' ? '语言' : 'Language'}</span>
+          <button className="mobile-lang-btn" onClick={toggleLang}>{T[lang].langToggle}</button>
+        </div>
+      </div>
+      {renderPage()}
+      {showBanner && <LangBanner lang={lang} onSwitch={() => { setLang('zh'); setShowBanner(false); }} onDismiss={() => setShowBanner(false)} />}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
