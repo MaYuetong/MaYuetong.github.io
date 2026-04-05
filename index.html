@@ -1048,37 +1048,15 @@ const curiosities = [
   { en: 'How societies respond to disasters — epidemics, natural hazards, and beyond', zh: '如何应对灾害（包括流行病学、自然灾害等）' },
 ];
 
-/* ── PhotoUpload ── */
-function PhotoUpload({ storageKey, height, placeholderText = 'Add Photo', style = {}, defaultSrc = null }) {
-  const [src, setSrc] = useState(() => {
-    try { return localStorage.getItem('img_' + storageKey) || defaultSrc; } catch { return defaultSrc; }
-  });
-  const inputRef = useRef(null);
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setSrc(ev.target.result);
-      try { localStorage.setItem('img_' + storageKey, ev.target.result); } catch {}
-    };
-    reader.readAsDataURL(file);
-  };
+/* ── PhotoDisplay ── */
+function PhotoUpload({ height, style = {}, defaultSrc = null }) {
   return (
-    <div style={{ width:'100%', height: height||'100%', ...style, position:'relative', cursor:'pointer', overflow:'hidden', display:'block' }}
-         onClick={() => inputRef.current?.click()}>
-      {src ? (
-        <>
-          <img src={src} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-          <div className="photo-change-hint">Change Photo</div>
-        </>
+    <div style={{ width:'100%', height: height||'100%', ...style, position:'relative', overflow:'hidden', display:'block' }}>
+      {defaultSrc ? (
+        <img src={defaultSrc} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
       ) : (
-        <div className="photo-placeholder" style={{ background: style.background || 'var(--surface)' }}>
-          <div className="photo-ph-icon">+</div>
-          <div className="photo-ph-text">{placeholderText}</div>
-        </div>
+        <div style={{ width:'100%', height:'100%', background: style.background || 'var(--surface)' }} />
       )}
-      <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} style={{ display:'none' }} />
     </div>
   );
 }
