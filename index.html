@@ -798,6 +798,7 @@ const places = [
   {
     id: 'beijing', name: 'Beijing', country: 'China',
     coordinates: [39.9042, 116.4074], years: '2017 – 2024', type: 'education',
+    img: 'places/beijing.png',
     subtitle: 'Study hub & research base',
     tooltipSummary: 'PKU MSc Geography (2021–24, GPA 3.74, distinction) · BFU BSc Urban Forestry (2017–21, GPA 91/100) · CIECC Internship (2021) · NTL Resilience Research → EuroCarto 2024 First Prize',
     memory: 'Beijing is where I spent seven formative years — first studying urban forestry at Beijing Forestry University, then geography and cartography at Peking University. My research on night-time light data and disaster resilience earned First Prize at the European Cartographic Conference 2024.',
@@ -807,6 +808,7 @@ const places = [
   {
     id: 'stockholm', name: 'Stockholm', country: 'Sweden',
     coordinates: [59.3293, 18.0686], years: '2022 – 2023', type: 'education',
+    img: 'places/stockholm.png',
     subtitle: 'Exchange program & remote research',
     tooltipSummary: 'Stockholm University Exchange (2022–23) · Modules: Human Geography, Globalisation & Strategy · UNESCO WHITRAP Research Assistant (remote) — Climate Change & Heritage Conservation',
     memory: 'Stockholm introduced me to a European intellectual tradition focused on communication, social geography, and policy. I simultaneously worked remotely for UNESCO WHITRAP on the Metropolitan Heritage Project, studying how climate change affects heritage conservation through interdisciplinary geospatial methods.',
@@ -816,6 +818,7 @@ const places = [
   {
     id: 'vienna', name: 'Vienna', country: 'Austria',
     coordinates: [48.2082, 16.3738], years: '2024 – 2025', type: 'work',
+    img: 'places/vienna1.png', modalImg: 'places/vienna2.gif',
     subtitle: 'IAEA Trainee — WebGIS & Data Analysis',
     tooltipSummary: 'IAEA/FAO Joint Centre, Trainee: WebGIS Developer & Data Analyst (Jan 2024 – Jan 2025) · Built GIS animal health monitoring platform · Maps for IAEA General Conference & annual reports · EuroCarto 2024 First Prize',
     memory: 'Vienna was my first full international professional posting. At the IAEA/FAO Joint Centre I developed a GIS-based animal health monitoring platform, produced thematic maps for the IAEA General Conference, and delivered GIS training materials for agricultural and veterinary applications.',
@@ -825,6 +828,7 @@ const places = [
   {
     id: 'faisalabad', name: 'Faisalabad', country: 'Pakistan',
     coordinates: [31.4504, 73.1350], years: 'Aug 2025', type: 'work',
+    img: 'places/pakistan.jpg',
     subtitle: 'IAEA Regional GIS Training Mission',
     tooltipSummary: 'IAEA Regional GIS Trainer & Technical Expert (SSA) · Delivered training on open-source geo-visualization for disease monitoring · Participants from Middle East, Africa, SE Asia · IAEA technical documentation prepared',
     memory: 'My first field training mission — delivering hands-on GIS training to government officials and researchers from across the Middle East, Africa, and Southeast Asia.',
@@ -834,6 +838,7 @@ const places = [
   {
     id: 'nyc', name: 'New York', country: 'United States',
     coordinates: [40.7128, -74.0060], years: '2025 – 2026', type: 'work',
+    img: 'places/US.PNG',
     subtitle: 'UN Secretariat — AI & GIS for Peace Operations',
     tooltipSummary: 'UNOCC Geopolitical Analyst, UN Trainee (Nov 2025 – May 2026) · AI Agent system for geospatial intelligence · Automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks',
     memory: 'At the UN Secretariat\'s UNOCC I\'m designing AI-powered systems that translate unstructured geopolitical requests into executable GIS tasks — building the bridge between natural language and spatial intelligence at scale.',
@@ -1044,9 +1049,9 @@ const curiosities = [
 ];
 
 /* ── PhotoUpload ── */
-function PhotoUpload({ storageKey, height, placeholderText = 'Add Photo', style = {} }) {
+function PhotoUpload({ storageKey, height, placeholderText = 'Add Photo', style = {}, defaultSrc = null }) {
   const [src, setSrc] = useState(() => {
-    try { return localStorage.getItem('img_' + storageKey) || null; } catch { return null; }
+    try { return localStorage.getItem('img_' + storageKey) || defaultSrc; } catch { return defaultSrc; }
   });
   const inputRef = useRef(null);
   const handleChange = (e) => {
@@ -1146,7 +1151,7 @@ function PlaceModal({ place, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         <div className="modal-photo-wrap">
-          <PhotoUpload storageKey={'cover_' + place.id} height={240} placeholderText="Add Cover Photo" style={{ background: place.gradient }} />
+          <PhotoUpload storageKey={'cover_' + place.id} height={240} placeholderText="Add Cover Photo" style={{ background: place.gradient }} defaultSrc={place.modalImg || place.img || null} />
           <button className="modal-close" onClick={onClose}>✕</button>
           <div className="modal-overlay-text">
             <div className="modal-city-name">{place.name}, {place.country}</div>
@@ -1231,7 +1236,7 @@ function PlacesPage({ setPage, lang = 'en' }) {
               <div key={place.id} className="place-card reveal" style={{ transitionDelay: `${i * 0.06}s` }} onClick={() => setSelected(place)}>
                 <div className="place-card-img-wrap">
                   <div className={'place-type-badge badge-' + place.type}>{place.type}</div>
-                  <PhotoUpload storageKey={place.id} height={200} placeholderText="Add Photo" style={{ background: place.gradient }} />
+                  <PhotoUpload storageKey={place.id} height={200} placeholderText="Add Photo" style={{ background: place.gradient }} defaultSrc={place.img || null} />
                 </div>
                 <div className="place-card-info">
                   <div className="place-card-name">{place.name}, {place.country}</div>
@@ -1262,7 +1267,7 @@ function AboutPage({ lang = 'en' }) {
         <div className="about-grid">
           <div className="reveal-left">
             <div className="about-portrait-wrap">
-              <PhotoUpload storageKey="portrait" height={373} placeholderText="Add Portrait" style={{ background: '#F0EDE8' }} />
+              <PhotoUpload storageKey="portrait" height={373} placeholderText="Add Portrait" style={{ background: '#F0EDE8' }} defaultSrc="other/IMG_1348.JPG" />
             </div>
           </div>
           <div className="about-text reveal">
@@ -1463,7 +1468,7 @@ function detectLang() {
 
 const T = {
   en: {
-    nav: { places:'Places', about:'About', experience:'Experience', projects:'Projects', contact:'Contact' },
+    nav: { places:'Places', about:'About', experience:'Experience', projects:'Projects', contact:'Contact', other:'Other' },
     langToggle: '中文', banner: 'Your browser is set to Chinese — switch to 中文?', bannerBtn: 'Switch', bannerDismiss: 'Keep English',
     hero: { eyebrow:'Geopolitical Analyst · GIS Researcher · AI Systems', tagline:'Building spatial intelligence at the intersection of AI, cartography, and crisis response', placesHeader:'My Journey in Places', placesSub:'Six cities across four continents. Hover markers for a summary · click to read the full story.', filterAll:'All', filterEdu:'Education', filterWork:'Work' },
     about: {
@@ -1471,16 +1476,17 @@ const T = {
       quote:'A map is never just geography. It is a choice — about what exists, what connects, and what a civilization decides to remember.',
       p1:"I'm Yuetong Ma — geographer, cartographer, and crisis information analyst. MSc in Geography from Peking University (GPA 3.74, distinction); field experience at the UN Secretariat in New York, IAEA/FAO Joint Centre in Vienna, and UNESCO in Stockholm. For me, every cartographic choice — scale, boundary, color — is an argument about what a civilization decides to remember.",
       p2:"My research draws on an MSc from Peking University and a BSc from Beijing Forestry University, and orbits two intertwined subjects: disasters and conflict. Disasters — typhoons, zoonotic outbreaks, cascading crises — expose where systems are fragile and where communities endure. Conflict is the other lens: between nations, between peoples, between human activity and the natural world. To understand how the world might become more peaceful and inclusive, you first have to study how and why it breaks. That is where my maps begin.",
-      p3:"Beyond data, I make traditional Chinese 缠花 (chánhuā) silk ornaments — a practice that sharpens how I read both Eastern and European visual traditions, and quietly informs the choices I make at every map.",
+      p3:"Beyond data, I founded Silora Orient — a personal brand at the intersection of Eastern aesthetics and contemporary design. Through traditional Chinese 缠花 (chánhuā) silk ornaments and creative work, I explore how ancient craft and visual tradition speak across cultures. This practice sharpens how I read both Eastern and European visual languages, and quietly informs every cartographic choice I make.",
       p4:"",
       interestsEyebrow:'Interests', interestsTitle:"What Drives Me", curiEyebrow:'Curiosities', curiTitle:"What I'm Curious About",
     },
     experience: { eyebrow:'Timeline', title:'Career & ', titleEm:'Education' },
     projects: { eyebrow:'Selected Work', title:'Research, Platforms & ', titleEm:'Systems', sub:'Research, GIS platforms, AI pipelines, and creative projects' },
     contact: { eyebrow:'Contact', h2:'Get in touch.', p:"Send me a message — whether it's about maps, collaboration, or just to say hello.", success:'Message sent — thank you!', successSub:"I'll get back to you soon.", sendAnother:'Send another', labelName:'Name', labelEmail:'Email', labelMsg:'Message', phName:'Your name', phEmail:'your@email.com', phMsg:"What's on your mind?", error:'Something went wrong — please try again.', send:'Send Message', sending:'Sending…' },
+    other: { eyebrow:'Life & Interests', title:'Beyond the Map' },
   },
   zh: {
-    nav: { places:'足迹', about:'关于', experience:'经历', projects:'项目', contact:'联系' },
+    nav: { places:'足迹', about:'关于', experience:'经历', projects:'项目', contact:'联系', other:'其他' },
     langToggle: 'EN', banner: '检测到您使用中文浏览器，是否切换至中文版？', bannerBtn: '切换', bannerDismiss: '保持英文',
     hero: { eyebrow:'地缘政治分析师 · GIS研究员 · AI系统', tagline:'在人工智能、制图学与危机响应的交汇处，构建空间智能', placesHeader:'我的足迹', placesSub:'跨越四大洲的六座城市。悬停标记查看概览，点击阅读完整故事。', filterAll:'全部', filterEdu:'教育', filterWork:'工作' },
     about: {
@@ -1488,13 +1494,14 @@ const T = {
       quote:'地图从来不只是地理。它是一种选择——关于什么存在、什么相连，以及一个文明决定记住什么。',
       p1:'我是马玥桐——地理学家、制图师与危机信息分析师。北京大学地理学硕士（GPA 3.74，优异毕业），曾就职于纽约联合国秘书处、维也纳IAEA/FAO联合中心及斯德哥尔摩联合国教科文组织。对我而言，每一个制图选择——比例尺、边界、色彩——都是关于文明选择记住什么的论断。',
       p2:'我的学术积淀来自北京大学地理学硕士与北京林业大学理学学士，研究始终围绕两个彼此交织的主题：灾害与冲突。灾害——台风、人畜共患病疫情、连锁危机——揭示系统的脆弱之处与社区的韧性所在。冲突则是另一面镜子：国家之间、人与人之间、人类活动与自然世界之间的冲突。要理解世界如何才能走向和平与包容，必须先研究它为何以及如何破裂。这正是我的地图开始的地方。',
-      p3:'数据之外，我制作传统缠花丝织饰品——这一实践磨砺了我对东西方视觉传统的感知，也渗透进我每一次制图的选择之中。',
+      p3:'数据之外，我创立了个人品牌「Silora Orient」——以东方美学与当代设计为交汇点。通过传统缠花丝织饰品与创意设计，探索古老手工艺与视觉传统如何跨文化对话。这一实践磨砺了我对东西方视觉语言的感知，也渗透进我每一次制图的选择之中。',
       p4:'',
       interestsEyebrow:'兴趣', interestsTitle:'驱动我的力量', curiEyebrow:'思考', curiTitle:'我所好奇的',
     },
     experience: { eyebrow:'时间线', title:'职业与', titleEm:'教育经历' },
     projects: { eyebrow:'精选作品', title:'研究、平台与', titleEm:'系统', sub:'研究项目、GIS平台、AI流水线与创意项目' },
     contact: { eyebrow:'联系', h2:'与我联系。', p:'发送消息给我——无论是关于地图、合作，还是只是打个招呼。', success:'消息已发送——谢谢！', successSub:'我会尽快回复您。', sendAnother:'再次发送', labelName:'姓名', labelEmail:'邮箱', labelMsg:'内容', phName:'您的姓名', phEmail:'your@email.com', phMsg:'您有什么想说的？', error:'出了点问题——请重试。', send:'发送消息', sending:'发送中…' },
+    other: { eyebrow:'生活与兴趣', title:'地图之外' },
   },
 };
 
@@ -1509,11 +1516,48 @@ function LangBanner({ lang, onSwitch, onDismiss }) {
 }
 
 /* ── App ── */
+const otherItems = [
+  { key:'dance',        img:'other/chinese traditional dancing.JPG', titleEn:'Chinese Traditional Dance', titleZh:'中国传统舞蹈', descEn:'A lifelong love of Chinese classical and folk dance — movement as cultural memory, connecting body, history, and artistic expression.', descZh:'中国传统舞蹈是我一生的热爱——用身体连接历史与艺术表达，以动作传递文化记忆。' },
+  { key:'sustainability', img:'other/sustainability.JPG', titleEn:'Sustainability Education', titleZh:'可持续发展教育', descEn:'Teaching sustainability to children in Shenzhen — introducing the next generation to climate awareness, responsible design, and systems thinking.', descZh:'在深圳为孩子们开展可持续发展课程——将气候意识、负责任的设计与系统思维带给下一代。' },
+  { key:'design',       img:'other/presentation.JPG', titleEn:'Design & Ideas Exchange', titleZh:'设计与灵感交流', descEn:'Exploring design thinking and sharing ideas across disciplines — bridging spatial intelligence, visual culture, and creative dialogue.', descZh:'探索设计思维，跨学科分享灵感——连接空间智能、视觉文化与创意对话。' },
+  { key:'photography',  img:'other/hiking.JPG', titleEn:'Photography & Outdoors', titleZh:'摄影与户外', descEn:'Finding perspective in landscapes — photography as a way of seeing, and the outdoors as a space for reflection and renewal.', descZh:'在山野中寻找视角——摄影是一种观看方式，户外是反思与更新的空间。' },
+];
+
+function OtherPage({ lang = 'en' }) {
+  useScrollReveal('other');
+  const o = T[lang].other;
+  return (
+    <div style={{ paddingTop: '60px', minHeight: '100vh' }}>
+      <div className="about-hero">
+        <div className="about-hero-name reveal">{o.eyebrow}</div>
+        <div className="about-hero-title reveal">{o.title}</div>
+      </div>
+      <div className="section-wrap" style={{ paddingTop: '2.5rem', paddingBottom: '4rem' }}>
+        <div className="places-grid">
+          {otherItems.map((item, i) => (
+            <div key={item.key} className="place-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+              <div className="place-card-img-wrap">
+                <img src={item.img} alt={lang === 'zh' ? item.titleZh : item.titleEn}
+                  style={{ width:'100%', height:'200px', objectFit:'cover', display:'block' }} />
+              </div>
+              <div className="place-card-info">
+                <div className="place-card-name">{lang === 'zh' ? item.titleZh : item.titleEn}</div>
+                <div className="place-card-meta" style={{ lineHeight: 1.6 }}>{lang === 'zh' ? item.descZh : item.descEn}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const navPages = [
   { id:'places', label:'Places' },
   { id:'about', label:'About' },
   { id:'experience', label:'Experience' },
   { id:'projects', label:'Projects' },
+  { id:'other', label:'Other' },
   { id:'contact', label:'Contact' },
 ];
 
@@ -1549,6 +1593,7 @@ function App() {
       case 'about':      return <AboutPage lang={lang} />;
       case 'experience': return <ExperiencePage lang={lang} />;
       case 'projects':   return <ProjectsPage lang={lang} />;
+      case 'other':      return <OtherPage lang={lang} />;
       case 'contact':    return <ContactPage lang={lang} />;
       default:           return <PlacesPage setPage={setPage} lang={lang} />;
     }
