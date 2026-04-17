@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="icon" type="image/jpeg" href="avatar.jpg" />
+<link rel="apple-touch-icon" href="avatar.jpg" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 :root {
@@ -1438,6 +1440,58 @@ function ContactPage({ lang = 'en' }) {
   );
 }
 
+/* ── VisitorsPage ── */
+function VisitorsPage({ lang = 'en' }) {
+  const isZh = lang === 'zh';
+  return (
+    <div style={{ minHeight:'100vh', background:'var(--white)', paddingTop:'80px' }}>
+      <div style={{ maxWidth:'760px', margin:'0 auto', padding:'3rem 2rem 5rem' }}>
+
+        {/* Header */}
+        <div className="reveal" style={{ marginBottom:'2.8rem', textAlign:'center' }}>
+          <div style={{ fontSize:'0.72rem', letterSpacing:'0.18em', textTransform:'uppercase', color:'var(--nadeshiko)', marginBottom:'0.8rem' }}>
+            {isZh ? '访客统计' : 'Visitor Analytics'}
+          </div>
+          <h2 style={{ fontFamily:'Cormorant Garamond, serif', fontWeight:300, fontSize:'clamp(2rem,4vw,2.8rem)', color:'var(--black)', lineHeight:1.2, marginBottom:'0.9rem' }}>
+            {isZh ? '来自全球的访客' : 'Visitors from Around the World'}
+          </h2>
+          <p style={{ fontSize:'0.88rem', color:'var(--secondary)', lineHeight:1.8, maxWidth:'480px', margin:'0 auto' }}>
+            {isZh
+              ? '感谢来自世界各地的朋友访问我的主页。以下地图实时记录访客的地理分布。'
+              : 'Thank you for visiting from wherever you are. The map below tracks the geographic origin of visitors in real time.'}
+          </p>
+        </div>
+
+        {/* ClustrMaps Globe Widget */}
+        <div className="reveal" style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2rem' }}>
+
+          {/* Globe — replace CLUSTRMAPS_SITE_ID with your real ID from clustrmaps.com */}
+          <div style={{ width:'260px', height:'260px', borderRadius:'50%', overflow:'hidden', border:'1px solid var(--line)', boxShadow:'0 4px 24px rgba(220,159,180,0.12)' }}>
+            <script type="text/javascript" id="clstr_globe" src="//clustrmaps.com/globe.js?d=CLUSTRMAPS_SITE_ID"></script>
+          </div>
+
+          {/* Map Badge — replace CLUSTRMAPS_SITE_ID with your real ID */}
+          <div style={{ textAlign:'center' }}>
+            <a href="https://clustrmaps.com/site/CLUSTRMAPS_SITE_ID" title="Visit tracker" target="_blank" rel="noopener">
+              <img src="//www.clustrmaps.com/map_v2.png?d=CLUSTRMAPS_SITE_ID&cl=ffffff&w=400" alt="Visitor Map" style={{ maxWidth:'100%', borderRadius:'6px', border:'1px solid var(--line)' }} />
+            </a>
+            <p style={{ marginTop:'0.8rem', fontSize:'0.75rem', color:'var(--secondary2)', letterSpacing:'0.05em' }}>
+              {isZh ? '点击地图查看详细访客来源' : 'Click the map to explore visitor origins'}
+            </p>
+          </div>
+
+        </div>
+
+        {/* Footer note */}
+        <div className="reveal" style={{ marginTop:'3.5rem', textAlign:'center', fontSize:'0.75rem', color:'var(--secondary2)', letterSpacing:'0.06em' }}>
+          {isZh ? '数据由 ClustrMaps 提供 · 实时更新' : 'Powered by ClustrMaps · Updated in real time'}
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 /* ── LANG DETECTION & TRANSLATIONS ── */
 function detectLang() {
   const nl = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
@@ -1446,7 +1500,7 @@ function detectLang() {
 
 const T = {
   en: {
-    nav: { places:'Places', about:'About', experience:'Experience', projects:'Projects', contact:'Contact', other:'Other' },
+    nav: { places:'Places', about:'About', experience:'Experience', projects:'Projects', contact:'Contact', other:'Other', visitors:'Visitors' },
     langToggle: '中文', banner: 'Your browser is set to Chinese — switch to 中文?', bannerBtn: 'Switch', bannerDismiss: 'Keep English',
     hero: { eyebrow:'Geopolitical Analyst · GIS Researcher · AI Systems', tagline:'Building spatial intelligence at the intersection of AI, cartography, and crisis response', placesHeader:'My Journey in Places', placesSub:'Six cities across four continents. Hover markers for a summary · click to read the full story.', filterAll:'All', filterEdu:'Education', filterWork:'Work' },
     about: {
@@ -1464,7 +1518,7 @@ const T = {
     other: { eyebrow:'Life & Interests', title:'Beyond the Map' },
   },
   zh: {
-    nav: { places:'足迹', about:'关于', experience:'经历', projects:'项目', contact:'联系', other:'其他' },
+    nav: { places:'足迹', about:'关于', experience:'经历', projects:'项目', contact:'联系', other:'其他', visitors:'访客' },
     langToggle: 'EN', banner: '检测到您使用中文浏览器，是否切换至中文版？', bannerBtn: '切换', bannerDismiss: '保持英文',
     hero: { eyebrow:'地缘政治分析师 · GIS研究员 · AI系统', tagline:'在人工智能、制图学与危机响应的交汇处，构建空间智能', placesHeader:'我的足迹', placesSub:'跨越四大洲的六座城市。悬停标记查看概览，点击阅读完整故事。', filterAll:'全部', filterEdu:'教育', filterWork:'工作' },
     about: {
@@ -1537,6 +1591,7 @@ const navPages = [
   { id:'projects', label:'Projects' },
   { id:'other', label:'Other' },
   { id:'contact', label:'Contact' },
+  { id:'visitors', label:'Visitors' },
 ];
 
 function App() {
@@ -1573,6 +1628,7 @@ function App() {
       case 'projects':   return <ProjectsPage lang={lang} />;
       case 'other':      return <OtherPage lang={lang} />;
       case 'contact':    return <ContactPage lang={lang} />;
+      case 'visitors':   return <VisitorsPage lang={lang} />;
       default:           return <PlacesPage setPage={setPage} lang={lang} />;
     }
   };
