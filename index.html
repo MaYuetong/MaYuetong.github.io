@@ -8,9 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" type="image/jpeg" href="avatar.jpg" />
 <link rel="apple-touch-icon" href="avatar.jpg" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 :root {
   --black: #1a1a1a;
@@ -656,6 +656,32 @@ user-select: none;
 .lang-toggle:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
 .nav:not(.nav-glass) .lang-toggle { border-color: rgba(0,0,0,0.18); color: var(--secondary); }
 .nav:not(.nav-glass) .lang-toggle:hover { color: var(--black); border-color: var(--black); }
+
+/* ── THEME TOGGLE (Day / Night) ── */
+.theme-toggle {
+  background: none; border: 1px solid rgba(255,255,255,0.32); color: rgba(255,255,255,0.72);
+  font-size: 0.7rem; letter-spacing: 0.07em; padding: 0.26rem 0.65rem;
+  border-radius: 4px; cursor: pointer; font-family: inherit; transition: all 0.2s; margin-left: 0.5rem;
+}
+.theme-toggle:hover { color: #fff; border-color: rgba(255,255,255,0.7); }
+.nav:not(.nav-glass) .theme-toggle { border-color: rgba(0,0,0,0.18); color: var(--secondary); }
+.nav:not(.nav-glass) .theme-toggle:hover { color: var(--black); border-color: var(--black); }
+
+/* ── DAY MODE NAV GLASS ── */
+.nav.nav-glass.day-mode {
+  background: rgba(253,249,245,0.82);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+.nav.nav-glass.day-mode .nav-logo { color: var(--black); }
+.nav.nav-glass.day-mode .nav-link { color: var(--secondary); }
+.nav.nav-glass.day-mode .nav-link:hover { color: var(--black); }
+.nav.nav-glass.day-mode .nav-link.active { color: var(--kohbai); border-bottom-color: var(--kohbai); }
+.nav.nav-glass.day-mode .theme-toggle,
+.nav.nav-glass.day-mode .lang-toggle { border-color: rgba(0,0,0,0.18); color: var(--secondary); }
+.nav.nav-glass.day-mode .theme-toggle:hover,
+.nav.nav-glass.day-mode .lang-toggle:hover { color: var(--black); border-color: var(--black); }
+.nav.nav-glass.day-mode .hamburger { color: var(--black); }
 .lang-banner {
   position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
   background: var(--black); color: #fff; border-radius: 10px;
@@ -1018,7 +1044,7 @@ const projects = [
   { type: 'AI + GIS', name: 'AI Agent GIS Pipeline — UNOCC', desc: 'AI Agent system to automatically identify geospatial information needs from unstructured peace operations text. Automated demand–task–operation pipeline converting requests into executable GIS tasks.', outcome: 'Operational at UN Secretariat, New York · Reduces manual analysis time' },
   { type: 'Product · Operations', name: 'DJI Service Automation & Logistics Optimization', desc: 'Automated service delivery workflow and AI-based damage assessment platform. Multi-objective optimization model for DJI North America warehouse network.', outcome: 'Automation 0% → 75% · Response efficiency +40% · Est. −30% logistics costs' },
   { type: 'Publication', name: 'Green View Index, Beijing Central Axis', desc: 'Analysed spatial variation of GVI using street view imagery and GIS techniques. Identified key environmental and urban form factors influencing GVI distribution.', outcome: '📄 Journal of Chinese Urban Forestry, 2020, 18(03) · RMB 10,000 research funding' },
-  { type: 'Culture · Craft', name: '缠花 (Chánhuā) — Traditional Chinese Silk Ornaments', desc: 'Handcrafted traditional Chinese wire-wrapped silk flower ornaments. Exploring where Eastern material culture, craft knowledge, and contemporary visual storytelling meet.', outcome: 'Where ancient craft meets modern narrative' },
+  { type: 'Culture · Craft', name: '缠花 (Chánhuā) — Traditional Chinese Silk Ornaments', desc: 'Handcrafted traditional Chinese wire-wrapped silk flower ornaments. Exploring where Eastern material culture, craft knowledge, and contemporary visual storytelling meet.', outcome: 'Where ancient craft meets modern narrative', url: 'https://silora-orient.vercel.app' },
 ];
 
 const recognitions = [
@@ -1064,9 +1090,23 @@ function PhotoUpload({ height, style = {}, defaultSrc = null }) {
 }
 
 /* ── LeafletMap ── */
-function LeafletMap({ onMarkerClick, compact }) {
+function LeafletMap({ onMarkerClick, compact, darkMode }) {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
+  const tileLayerRef = useRef(null);
+
+  /* Swap tile layer when darkMode changes (after map is initialized) */
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    if (tileLayerRef.current) mapInstanceRef.current.removeLayer(tileLayerRef.current);
+    const url = darkMode
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    tileLayerRef.current = L.tileLayer(url, {
+      attribution: '© OpenStreetMap contributors © CARTO',
+      subdomains: 'abcd', maxZoom: 20,
+    }).addTo(mapInstanceRef.current);
+  }, [darkMode]);
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return;
@@ -1076,7 +1116,10 @@ function LeafletMap({ onMarkerClick, compact }) {
       scrollWheelZoom: false, zoomControl: false,
     });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    const initUrl = darkMode
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    tileLayerRef.current = L.tileLayer(initUrl, {
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd', maxZoom: 20,
     }).addTo(map);
@@ -1150,7 +1193,7 @@ function PlaceModal({ place, onClose }) {
 }
 
 /* ── PlacesPage ── */
-function PlacesPage({ setPage, lang = 'en' }) {
+function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
   const [selected, setSelected] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const contentRef = useRef(null);
@@ -1179,17 +1222,19 @@ function PlacesPage({ setPage, lang = 'en' }) {
       {/* FULL-VIEWPORT HERO */}
       <section className="hero">
         <div className="hero-map-wrap">
-          <LeafletMap onMarkerClick={setSelected} />
+          <LeafletMap onMarkerClick={setSelected} darkMode={darkMode} />
         </div>
-        <div className="hero-overlay" />
+        <div className="hero-overlay" style={darkMode ? {} : {
+          background: 'linear-gradient(180deg,rgba(253,249,245,0.78) 0%,rgba(253,249,245,0.38) 38%,rgba(253,249,245,0.32) 62%,rgba(253,249,245,0.82) 100%)'
+        }} />
         <div className="hero-content" ref={contentRef}>
-          <div className="hero-eyebrow">{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
-          <h1 className="hero-name">Yuetong<br /><em>Ma</em></h1>
+          <div className="hero-eyebrow" style={!darkMode ? {color:'var(--kohbai)'} : {}}>{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
+          <h1 className="hero-name" style={!darkMode ? {color:'var(--black)'} : {}}>Yuetong<br /><em>Ma</em></h1>
           <div className="hero-divider" />
-          <p className="hero-tagline">{T[lang].hero.tagline}</p>
-          <div className="hero-cities">New York · Vienna · Faisalabad · Shenzhen · Beijing · Stockholm</div>
+          <p className="hero-tagline" style={!darkMode ? {color:'rgba(30,20,25,0.58)'} : {}}>{T[lang].hero.tagline}</p>
+          <div className="hero-cities" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}}>New York · Vienna · Faisalabad · Shenzhen · Beijing · Stockholm</div>
         </div>
-        <div className="hero-scroll" onClick={scrollDown}>
+        <div className="hero-scroll" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}} onClick={scrollDown}>
           <div className="hero-scroll-arrow">↓</div>
           <span>Explore Journey</span>
         </div>
@@ -1255,7 +1300,11 @@ function AboutPage({ lang = 'en' }) {
             <div className="about-divider" />
             <p>{a.p1}</p>
             <p>{a.p2}</p>
-            <p>{a.p3}</p>
+            <p>{a.p3.split('Silora Orient').map((part, i, arr) =>
+              i < arr.length - 1
+                ? <React.Fragment key={i}>{part}<a href="https://silora-orient.vercel.app" target="_blank" rel="noopener" style={{color:'var(--kohbai)',borderBottom:'1px solid rgba(225,107,140,0.35)',paddingBottom:'1px',transition:'border-color 0.2s'}}>Silora Orient</a></React.Fragment>
+                : part
+            )}</p>
             {a.p4 && <p>{a.p4}</p>}
           </div>
         </div>
@@ -1360,9 +1409,18 @@ function ProjectsPage({ lang = 'en' }) {
             {projects.map((p, i) => (
               <div key={i} className="project-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
                 <div className="project-type">{p.type}</div>
-                <div className="project-name">{p.name}</div>
+                <div className="project-name">
+                  {p.url
+                    ? <a href={p.url} target="_blank" rel="noopener" style={{color:'inherit',textDecoration:'none'}}>{p.name}</a>
+                    : p.name}
+                </div>
                 <div className="project-desc">{p.desc}</div>
-                {p.outcome && <div className="project-outcome">{p.outcome}</div>}
+                {p.outcome && (
+                  <div className="project-outcome">
+                    {p.outcome}
+                    {p.url && <span> · <a href={p.url} target="_blank" rel="noopener" style={{color:'var(--kohbai)',textDecoration:'none',fontWeight:600}}>Visit ↗</a></span>}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -1547,6 +1605,11 @@ function App() {
   const [lang, setLang] = useState('en');
   const [showBanner, setShowBanner] = useState(() => detectLang() === 'zh');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('yt-dark-mode');
+    return saved !== null ? saved === 'true' : true;
+  });
+  const toggleTheme = () => setDarkMode(d => { const next = !d; localStorage.setItem('yt-dark-mode', String(next)); return next; });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1569,7 +1632,7 @@ function App() {
 
   const renderPage = () => {
     switch (page) {
-      case 'places':     return <PlacesPage setPage={setPage} lang={lang} />;
+      case 'places':     return <PlacesPage setPage={setPage} lang={lang} darkMode={darkMode} />;
       case 'about':      return <AboutPage lang={lang} />;
       case 'experience': return <ExperiencePage lang={lang} />;
       case 'projects':   return <ProjectsPage lang={lang} />;
@@ -1581,7 +1644,7 @@ function App() {
 
   return (
     <>
-      <nav className={'nav' + (navGlass ? ' nav-glass' : '')}>
+      <nav className={'nav' + (navGlass ? ' nav-glass' : '') + (navGlass && !darkMode ? ' day-mode' : '')}>
         <div className="nav-logo" onClick={() => goTo('places')}>Yuetong Ma</div>
         <ul className="nav-links">
           {navPages.map(p => (
@@ -1590,6 +1653,7 @@ function App() {
             </li>
           ))}
         </ul>
+        <button className="theme-toggle" onClick={toggleTheme} title={darkMode ? 'Switch to day mode' : 'Switch to night mode'}>{darkMode ? '☀ Day' : '☾ Night'}</button>
         <button className="lang-toggle" onClick={toggleLang}>{T[lang].langToggle}</button>
         <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
           <span /><span /><span />

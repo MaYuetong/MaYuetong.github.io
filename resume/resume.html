@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yuetong Ma — Resume</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1d1d1f;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 794px;
+    margin: 0 auto;
+    padding: 52px 64px 68px;
+  }
+
+  /* ── HEADER ── */
+  .header { margin-bottom: 32px; }
+
+  .header-name {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: #1d1d1f;
+    margin-bottom: 3px;
+  }
+
+  .header-title {
+    font-size: 12.5px;
+    color: #6e6e73;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  .header-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 18px;
+    font-size: 11.5px;
+    color: #6e6e73;
+    align-items: center;
+  }
+
+  .header-contact a { color: #0071e3; text-decoration: none; }
+  .header-contact a:hover { text-decoration: underline; }
+  .header-dot { color: #c7c7cc; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: #e5e5ea;
+    margin: 20px 0;
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 24px; }
+
+  .section-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8e8e93;
+    margin-bottom: 13px;
+  }
+
+  /* ── SUMMARY ── */
+  .summary {
+    font-size: 12.5px;
+    color: #3a3a3c;
+    line-height: 1.68;
+    max-width: 660px;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-item { margin-bottom: 18px; }
+  .exp-item:last-child { margin-bottom: 0; }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1px;
+    gap: 12px;
+  }
+
+  .exp-org {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+    flex-shrink: 0;
+  }
+
+  .exp-date {
+    font-size: 11px;
+    color: #8e8e93;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .exp-role {
+    font-size: 12px;
+    color: #3a3a3c;
+    margin-bottom: 1px;
+  }
+
+  .exp-location {
+    font-size: 11px;
+    color: #aeaeb2;
+    margin-bottom: 5px;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    padding: 0;
+  }
+
+  .exp-bullets li {
+    font-size: 12px;
+    color: #3a3a3c;
+    line-height: 1.56;
+    margin-bottom: 3.5px;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .exp-bullets li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: #c7c7cc;
+    font-weight: 400;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-item { margin-bottom: 13px; }
+  .edu-item:last-child { margin-bottom: 0; }
+
+  .edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .edu-school {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d1d1f;
+  }
+
+  .edu-date {
+    font-size: 11px;
+    color: #8e8e93;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .edu-degree {
+    font-size: 12px;
+    color: #3a3a3c;
+    margin-top: 1px;
+  }
+
+  .edu-detail {
+    font-size: 11.5px;
+    color: #8e8e93;
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px 28px;
+  }
+
+  .skill-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .skill-cat {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d1d1f;
+    min-width: 116px;
+    flex-shrink: 0;
+  }
+
+  .skill-val {
+    font-size: 11.5px;
+    color: #6e6e73;
+    line-height: 1.5;
+  }
+
+  /* ── ACHIEVEMENTS ── */
+  .ach-item { margin-bottom: 8px; }
+  .ach-item:last-child { margin-bottom: 0; }
+
+  .ach-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d1d1f;
+  }
+
+  .ach-desc {
+    font-size: 11.5px;
+    color: #8e8e93;
+    line-height: 1.5;
+    margin-top: 1px;
+  }
+
+  /* ── LANGUAGES ── */
+  .lang-row {
+    display: flex;
+    gap: 24px;
+  }
+
+  .lang-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .lang-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #1d1d1f;
+  }
+
+  .lang-level {
+    font-size: 11px;
+    color: #8e8e93;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    html, body { background: white; }
+    .page { padding: 28px 36px; max-width: 100%; }
+    a { color: #1d1d1f !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-name">Yuetong Ma</div>
+    <div class="header-title">Geopolitical Analyst · GIS Researcher · AI Systems · UN Secretariat</div>
+    <div class="header-contact">
+      <span>joannasoo@163.com</span>
+      <span class="header-dot">·</span>
+      <a href="https://arcg.is/j9qHv" target="_blank">Spatial Portfolio ↗</a>
+      <span class="header-dot">·</span>
+      <a href="https://www.linkedin.com/in/yuetong-ma-a2258324b/" target="_blank">LinkedIn ↗</a>
+      <span class="header-dot">·</span>
+      <span>Personal Website: <em>[add URL when hosted]</em></span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SUMMARY -->
+  <div class="section">
+    <div class="section-label">Summary</div>
+    <div class="summary">
+      GIS researcher and geospatial systems designer with experience across the UN system (UNOCC/DPO, IAEA/FAO), academic research, and commercial product management. Builds AI-driven spatial intelligence pipelines, WebGIS platforms, and decision-support tools. MSc Geography, Peking University (GPA 3.74, distinction). First Prize, European Cartographic Conference 2024.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EXPERIENCE -->
+  <div class="section">
+    <div class="section-label">Experience</div>
+
+    <!-- UN UNOCC — FIRST -->
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-org">UN Secretariat — Dept. of Peace Operations (DPO), UNOCC</div>
+        <div class="exp-date">11/2025 – 05/2026</div>
+      </div>
+      <div class="exp-role">Geopolitical Analyst (UN Trainee)</div>
+      <div class="exp-location">New York, USA (Hybrid)</div>
+      <ul class="exp-bullets">
+        <li>Designed an AI Agent-based system to automatically identify geospatial information needs related to peace and political affairs across global UN operations.</li>
+        <li>Developed an automated "demand–task–operation" pipeline converting unstructured requests into executable GIS tasks, reducing manual handoff time across analytical workflows.</li>
+      </ul>
+    </div>
+
+    <!-- DJI -->
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-org">DJI Innovation (Shenzhen DJI Sciences and Technologies Ltd.)</div>
+        <div class="exp-date">02/2025 – 03/2026</div>
+      </div>
+      <div class="exp-role">Product Manager — Technical Service Solutions</div>
+      <div class="exp-location">Shenzhen, China</div>
+      <ul class="exp-bullets">
+        <li>Led end-to-end design of an automated service delivery workflow; improved response efficiency by 40% and increased automation rate from 0% to 75% using CRM, LMS, and RMS systems.</li>
+        <li>Contributed to an AI Agent-based service platform integrating AI customer service and automated damage assessment.</li>
+        <li>Built a multi-objective optimization model for the North America warehouse network; proposed cost-saving scenarios with estimated 30% reduction in logistics costs.</li>
+      </ul>
+    </div>
+
+    <!-- IAEA GIS Trainer -->
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-org">International Atomic Energy Agency (IAEA)</div>
+        <div class="exp-date">08/2025</div>
+      </div>
+      <div class="exp-role">Regional GIS Trainer & Technical Expert (SSA)</div>
+      <div class="exp-location">Faisalabad, Pakistan</div>
+      <ul class="exp-bullets">
+        <li>Designed and delivered training on open-source geo-visualization tools for vector-borne disease and animal health monitoring; prepared technical documentation per IAEA standards.</li>
+        <li>Led hands-on sessions for government officials and researchers from the Middle East, Africa, and Southeast Asia covering CRS, symbology, heatmaps, buffers, animations, and map publishing.</li>
+      </ul>
+    </div>
+
+    <!-- IAEA Trainee -->
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-org">IAEA / FAO Joint Centre</div>
+        <div class="exp-date">01/2024 – 01/2025</div>
+      </div>
+      <div class="exp-role">Trainee — WebGIS Developer & Data Analyst / Project Assistant</div>
+      <div class="exp-location">Vienna, Austria</div>
+      <ul class="exp-bullets">
+        <li>Developed a GIS-based animal health monitoring platform enabling data upload, management, and geospatial visualization; integrated spatial and temporal datasets to improve zoonotic disease surveillance workflows.</li>
+        <li>Produced thematic maps and visual products for the IAEA General Conference and annual reports; drafted project progress reports highlighting best practices and impact.</li>
+        <li>Developed and delivered GIS training materials for agricultural and veterinary applications.</li>
+      </ul>
+    </div>
+
+    <!-- UNESCO -->
+    <div class="exp-item">
+      <div class="exp-header">
+        <div class="exp-org">UNESCO – WHITRAP</div>
+        <div class="exp-date">12/2022 – 04/2023</div>
+      </div>
+      <div class="exp-role">Research Assistant — Climate Change & Heritage Conservation</div>
+      <div class="exp-location">Remote (Sweden-based)</div>
+      <ul class="exp-bullets">
+        <li>Contributed to the Metropolitan Heritage Project; assessed climate change impacts on heritage conservation using AI and geospatial methods. Prepared literature reviews and research reports for project stakeholders.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EDUCATION -->
+  <div class="section">
+    <div class="section-label">Education</div>
+
+    <div class="edu-item">
+      <div class="edu-header">
+        <div class="edu-school">Peking University</div>
+        <div class="edu-date">09/2021 – 07/2024</div>
+      </div>
+      <div class="edu-degree">MSc in Geography — GPA 3.74/4.0, with distinction</div>
+      <div class="edu-detail">WebGIS; Python; Machine Learning (Matlab); Big Data Analysis (ArcGIS); Quantitative Methods; Land Use and Policy</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-header">
+        <div class="edu-school">Stockholm University</div>
+        <div class="edu-date">09/2022 – 03/2023</div>
+      </div>
+      <div class="edu-degree">Exchange Program</div>
+      <div class="edu-detail">Human Geography · Communication · Globalisation and Strategy</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-header">
+        <div class="edu-school">Beijing Forestry University</div>
+        <div class="edu-date">09/2017 – 07/2021</div>
+      </div>
+      <div class="edu-degree">BSc in Forestry (Urban Forestry) — GPA 91.22/100, with distinction</div>
+      <div class="edu-detail">Mathematical Statistics (Python; R) · Urban Ecology · Forest Ecology · Landscape Ecology · Remote Sensing and GIS</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SKILLS -->
+  <div class="section">
+    <div class="section-label">Skills</div>
+    <div class="skills-grid">
+      <div class="skill-row">
+        <div class="skill-cat">GIS & Spatial</div>
+        <div class="skill-val">ArcGIS, QGIS, WebGIS, Leaflet, PostGIS, CartoDB</div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">Programming</div>
+        <div class="skill-val">Python, R, JavaScript, SQL, Matlab</div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">AI & ML</div>
+        <div class="skill-val">LightGBM, AI Agent design, NLP pipelines, SHAP/LIME</div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">Data & Remote Sensing</div>
+        <div class="skill-val">NASA Black Marble, satellite imagery, CRS, raster analysis</div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">Systems & Platforms</div>
+        <div class="skill-val">CRM · LMS · RMS · Formspree · ArcGIS Online</div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">Cartography</div>
+        <div class="skill-val">Thematic mapping, symbology, heatmaps, animations, map publishing</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="section">
+    <div class="section-label">Selected Achievements</div>
+
+    <div class="ach-item">
+      <div class="ach-title">First Prize — European Cartographic Conference 2024 (EuroCarto)</div>
+      <div class="ach-desc">Regional resilience assessment using NASA Black Marble NTL data; patented dynamic pattern recognition method combining LightGBM and interpretable AI (SHAP).</div>
+    </div>
+
+    <div class="ach-item">
+      <div class="ach-title">Two SCI Q1 papers under review</div>
+      <div class="ach-desc">Machine learning and interpretable AI applied to spatio-temporal disaster recovery analysis; non-linear socio-environmental factor identification.</div>
+    </div>
+
+    <div class="ach-item">
+      <div class="ach-title">Published — Journal of Chinese Urban Forestry, 2020, 18(03)</div>
+      <div class="ach-desc">Green View Index analysis along Beijing Central Axis using street view imagery and GIS. Awarded RMB 10,000 research funding and Excellent Graduation Thesis.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- LANGUAGES -->
+  <div class="section">
+    <div class="section-label">Languages</div>
+    <div class="lang-row">
+      <div class="lang-item">
+        <div class="lang-name">Chinese</div>
+        <div class="lang-level">Native</div>
+      </div>
+      <div class="lang-item">
+        <div class="lang-name">English</div>
+        <div class="lang-level">Professional</div>
+      </div>
+      <div class="lang-item">
+        <div class="lang-name">German</div>
+        <div class="lang-level">Basic</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
