@@ -301,8 +301,8 @@ user-select: none;
 .badge-education { background: var(--taikoh); color: var(--suoh); }
 .badge-work { background: var(--kuwazome); color: #fff; }
 .place-card-info { padding: 0.9rem 1.1rem 1.1rem; border-top: 1px solid var(--line); }
-.place-card-name { font-weight: 600; font-size: 0.95rem; color: var(--black); margin-bottom: 0.2rem; }
-.place-card-meta { font-size: 0.76rem; color: var(--secondary); }
+.place-card-name { font-weight: 600; font-size: 0.9rem; color: var(--black); margin-bottom: 0.28rem; line-height: 1.35; }
+.place-card-meta { font-size: 0.72rem; color: var(--secondary2); letter-spacing: 0.01em; }
 
 /* ── PHOTO UPLOAD ── */
 .photo-upload-area {
@@ -1373,8 +1373,8 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
                   <PhotoUpload storageKey={place.id} height={200} placeholderText="Add Photo" style={{ background: place.gradient }} defaultSrc={place.img || null} />
                 </div>
                 <div className="place-card-info">
-                  <div className="place-card-name">{place.name}, {place.country}</div>
-                  <div className="place-card-meta">{place.years} · {place.subtitle}</div>
+                  <div className="place-card-name">{place.subtitle}</div>
+                  <div className="place-card-meta">{place.name}, {place.country} · {place.years}</div>
                 </div>
               </div>
             ))}
