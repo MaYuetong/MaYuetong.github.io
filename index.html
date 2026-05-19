@@ -378,28 +378,38 @@ user-select: none;
 
 /* ── LEAFLET TOOLTIP ── */
 .leaflet-tooltip.rich-tooltip {
-  background: rgba(22,6,12,0.96) !important;
-  border: 1px solid rgba(225,107,140,0.4) !important;
-  border-radius: 8px !important; padding: 0 !important;
-  max-width: 200px !important; box-shadow: 0 8px 28px rgba(0,0,0,0.65) !important;
+  background: rgba(12,4,8,0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 0.5px solid rgba(255,255,255,0.1) !important;
+  border-radius: 12px !important; padding: 0 !important;
+  max-width: 172px !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 0.5px rgba(255,255,255,0.05) !important;
   white-space: normal !important; pointer-events: none !important;
 }
 .leaflet-tooltip-top.rich-tooltip::before {
-  border-top-color: rgba(225,107,140,0.4) !important;
+  border-top-color: rgba(255,255,255,0.08) !important;
 }
-.rich-tooltip-inner { padding: 10px 13px 11px; }
+.rich-tooltip-inner { padding: 13px 15px 12px; }
 .rt-city {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1rem; font-weight: 500; color: var(--ikkonzome); margin-bottom: 2px;
+  font-size: 1.08rem; font-weight: 400; color: #fff;
+  line-height: 1.15; margin-bottom: 3px;
+  letter-spacing: 0.01em;
 }
 .rt-period {
-  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(255,255,255,0.32); margin-bottom: 8px;
+  font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28); margin-bottom: 0;
+}
+.rt-divider {
+  width: 100%; height: 0.5px;
+  background: rgba(255,255,255,0.08);
+  margin: 10px 0;
 }
 .rt-cta {
-  font-size: 0.62rem; letter-spacing: 0.06em;
-  color: rgba(244,167,185,0.7);
-  display: flex; align-items: center; gap: 4px;
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(244,167,185,0.75);
+  display: flex; align-items: center; justify-content: space-between;
 }
 
 /* ── ABOUT PAGE ── */
@@ -546,43 +556,48 @@ user-select: none;
 }
 .projects-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  gap: 1.8rem;
 }
 .project-card {
   padding: 0; background: var(--white);
-  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  transition: background 0.22s, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+  border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  transition: transform 0.32s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.32s ease, border-color 0.2s;
   cursor: default; display: flex; flex-direction: column;
 }
-.project-card:hover { background: var(--surface); transform: scale(1.013); }
-.project-card-img {
-  width: 100%; height: 180px; object-fit: cover;
-  border-bottom: 1px solid var(--line); display: block;
-  background: var(--surface);
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(100,54,60,0.1), 0 4px 12px rgba(0,0,0,0.05);
+  border-color: rgba(225,107,140,0.18);
 }
-.project-card-body { padding: 1.8rem; flex: 1; display: flex; flex-direction: column; }
+.project-card-img {
+  width: 100%; height: 220px; object-fit: cover;
+  display: block; background: var(--surface);
+}
+.project-card-body { padding: 1.7rem 1.8rem; flex: 1; display: flex; flex-direction: column; }
 .project-type {
-  font-size: 0.6rem; letter-spacing: 0.13em; text-transform: uppercase;
-  color: var(--secondary); margin-bottom: 0.55rem; font-weight: 600;
+  font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--secondary2); margin-bottom: 0.5rem; font-weight: 600;
 }
 .project-name {
-  font-weight: 600; font-size: 0.96rem; color: var(--black);
-  margin-bottom: 0.65rem; line-height: 1.3;
+  font-weight: 600; font-size: 0.97rem; color: var(--black);
+  margin-bottom: 0.6rem; line-height: 1.3;
 }
-.project-desc { font-size: 0.83rem; color: var(--secondary); line-height: 1.67; margin-bottom: 0.8rem; flex: 1; }
-.project-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.8rem; }
+.project-desc { font-size: 0.82rem; color: var(--secondary); line-height: 1.7; margin-bottom: 0.85rem; flex: 1; }
+.project-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.85rem; }
 .project-tag {
-  font-size: 0.68rem; padding: 0.18rem 0.55rem; border-radius: 3px;
-  background: rgba(var(--ikkonzome-rgb),0.1); color: var(--kohbai);
-  font-weight: 500; letter-spacing: 0.03em;
+  font-size: 0.64rem; padding: 0.15rem 0.52rem; border-radius: 20px;
+  background: rgba(var(--ikkonzome-rgb),0.08); color: var(--kohbai);
+  font-weight: 500; letter-spacing: 0.02em; border: 1px solid rgba(var(--ikkonzome-rgb),0.2);
 }
-.project-links { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+.project-links { display: flex; gap: 0.55rem; margin-bottom: 0.85rem; flex-wrap: wrap; }
 .project-link-btn {
-  font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.8rem;
-  border-radius: 4px; border: 1px solid; cursor: pointer; letter-spacing: 0.04em;
-  text-decoration: none; transition: background 0.18s, color 0.18s;
+  font-size: 0.7rem; font-weight: 600; padding: 0.35rem 0.9rem;
+  border-radius: 6px; border: 1px solid; cursor: pointer; letter-spacing: 0.04em;
+  text-decoration: none; transition: background 0.18s, color 0.18s, transform 0.15s;
   font-family: inherit;
 }
+.project-link-btn:hover { transform: translateY(-1px); }
 .project-link-live {
   background: var(--kohbai); color: #fff; border-color: var(--kohbai);
 }
@@ -590,11 +605,11 @@ user-select: none;
 .project-link-github {
   background: transparent; color: var(--black); border-color: var(--line);
 }
-.project-link-github:hover { border-color: var(--black); }
+.project-link-github:hover { border-color: var(--secondary2); }
 .project-outcome {
-  font-size: 0.76rem; font-weight: 500; color: var(--black);
-  border-top: 1px solid var(--line); padding-top: 0.7rem;
-  line-height: 1.5; letter-spacing: 0.01em; margin-top: auto;
+  font-size: 0.74rem; font-weight: 500; color: var(--secondary);
+  border-top: 1px solid var(--line); padding-top: 0.75rem;
+  line-height: 1.58; margin-top: auto;
 }
 
 /* ── RECOGNITION SECTION ── */
@@ -813,8 +828,7 @@ user-select: none;
   .timeline-content { padding-left: 0; }
 
   /* Projects */
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-card { border-right: none; }
+  .projects-grid { grid-template-columns: 1fr; gap: 1.2rem; }
 
   /* Contact */
   .contact-form-row { grid-template-columns: 1fr; }
@@ -860,19 +874,29 @@ user-select: none;
 .project-featured {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  border-right: none;
+  grid-template-columns: 1.35fr 1fr;
+  border: 1px solid var(--line);
 }
 .project-featured .project-card-img {
-  height: 100%; min-height: 300px;
+  height: 100%; min-height: 360px;
   border-bottom: none; border-right: 1px solid var(--line);
 }
-.project-featured .project-card-body { padding: 2.4rem 2.2rem; }
-.project-featured .project-name { font-size: 1.15rem; margin-bottom: 0.8rem; }
-.project-featured .project-desc { font-size: 0.87rem; }
+.project-featured .project-card-body {
+  padding: 3rem 2.8rem;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.project-featured .project-type { margin-bottom: 0.7rem; }
+.project-featured .project-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  font-weight: 400; line-height: 1.2; margin-bottom: 1rem;
+}
+.project-featured .project-desc { font-size: 0.85rem; line-height: 1.75; }
 @media (max-width: 768px) {
-  .project-featured { grid-template-columns: 1fr; border-right: none; }
-  .project-featured .project-card-img { height: 220px; border-right: none; border-bottom: 1px solid var(--line); }
+  .project-featured { grid-template-columns: 1fr; }
+  .project-featured .project-card-img { height: 240px; border-right: none; border-bottom: 1px solid var(--line); }
+  .project-featured .project-card-body { padding: 1.8rem; }
+  .project-featured .project-name { font-size: 1.3rem; }
 }
 
 /* ── Fix Leaflet tile seam lines ── */
@@ -1247,8 +1271,9 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
       });
       const tooltipHtml = `<div class="rich-tooltip-inner">
         <div class="rt-city">${place.name}</div>
-        <div class="rt-period">${place.country} · ${place.years}</div>
-        <div class="rt-cta">Click to know more →</div>
+        <div class="rt-period">${place.country}</div>
+        <div class="rt-divider"></div>
+        <div class="rt-cta"><span>${place.subtitle.split('—')[0].trim()}</span><span>↗</span></div>
       </div>`;
       const marker = L.marker(place.coordinates, { icon }).addTo(map);
       marker.bindTooltip(tooltipHtml, { className:'rich-tooltip', permanent:false, direction:'top', offset:[0,-18], opacity:1 });
