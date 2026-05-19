@@ -338,14 +338,14 @@ user-select: none;
 
 /* ── MODAL ── */
 .modal-overlay {
-  position: fixed; inset: 0; z-index: 2000;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2000;
   background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
+  display: grid; place-items: center;
   padding: 1.5rem; animation: fadeIn 0.22s ease;
 }
 .modal-card {
   background: var(--white); max-width: 600px; width: 100%;
-  max-height: 90vh; overflow-y: auto;
+  max-height: 88vh; overflow-y: auto;
   border-radius: 14px;
   animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
 }
@@ -378,25 +378,29 @@ user-select: none;
 
 /* ── LEAFLET TOOLTIP ── */
 .leaflet-tooltip.rich-tooltip {
-  background: rgba(30,8,14,0.97) !important;
-  border: 1px solid rgba(225,107,140,0.45) !important;
+  background: rgba(22,6,12,0.96) !important;
+  border: 1px solid rgba(225,107,140,0.4) !important;
   border-radius: 8px !important; padding: 0 !important;
-  max-width: 290px !important; box-shadow: 0 12px 36px rgba(0,0,0,0.7) !important;
+  max-width: 200px !important; box-shadow: 0 8px 28px rgba(0,0,0,0.65) !important;
   white-space: normal !important; pointer-events: none !important;
 }
 .leaflet-tooltip-top.rich-tooltip::before {
-  border-top-color: rgba(225,107,140,0.45) !important;
+  border-top-color: rgba(225,107,140,0.4) !important;
 }
-.rich-tooltip-inner { padding: 12px 15px 14px; }
+.rich-tooltip-inner { padding: 10px 13px 11px; }
 .rt-city {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.05rem; font-weight: 500; color: var(--ikkonzome); margin-bottom: 2px;
+  font-size: 1rem; font-weight: 500; color: var(--ikkonzome); margin-bottom: 2px;
 }
 .rt-period {
-  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(255,255,255,0.35); margin-bottom: 7px;
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.32); margin-bottom: 8px;
 }
-.rt-summary { font-size: 0.72rem; line-height: 1.58; color: rgba(255,255,255,0.72); }
+.rt-cta {
+  font-size: 0.62rem; letter-spacing: 0.06em;
+  color: rgba(244,167,185,0.7);
+  display: flex; align-items: center; gap: 4px;
+}
 
 /* ── ABOUT PAGE ── */
 .about-hero {
@@ -836,11 +840,11 @@ user-select: none;
 
 /* ── PAGE TRANSITION ── */
 @keyframes pageFadeIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .page-content {
-  animation: pageFadeIn 0.42s cubic-bezier(0.22,1,0.36,1) both;
+  animation: pageFadeIn 0.38s ease both;
 }
 
 /* ── HERO CURSOR GLOW ── */
@@ -1243,8 +1247,8 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
       });
       const tooltipHtml = `<div class="rich-tooltip-inner">
         <div class="rt-city">${place.name}</div>
-        <div class="rt-period">${place.years} · ${place.country}</div>
-        <div class="rt-summary">${place.tooltipSummary}</div>
+        <div class="rt-period">${place.country} · ${place.years}</div>
+        <div class="rt-cta">Click to know more →</div>
       </div>`;
       const marker = L.marker(place.coordinates, { icon }).addTo(map);
       marker.bindTooltip(tooltipHtml, { className:'rich-tooltip', permanent:false, direction:'top', offset:[0,-18], opacity:1 });
