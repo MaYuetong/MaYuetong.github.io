@@ -824,6 +824,53 @@ user-select: none;
   .places-grid { grid-template-columns: 1fr; }
 }
 
+/* ── SCROLL PROGRESS BAR ── */
+.scroll-progress-bar {
+  position: fixed; top: 0; left: 0; z-index: 1001;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ikkonzome), var(--kohbai));
+  pointer-events: none;
+  transition: width 0.08s linear;
+  transform-origin: left;
+}
+
+/* ── PAGE TRANSITION ── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-content {
+  animation: pageFadeIn 0.42s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+/* ── HERO CURSOR GLOW ── */
+.hero-cursor-glow {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(700px circle at var(--cx, -200%) var(--cy, 50%),
+    rgba(244,167,185,0.12), transparent 55%);
+  transition: background 0.04s;
+}
+
+/* ── FEATURED PROJECT CARD ── */
+.project-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  border-right: none;
+}
+.project-featured .project-card-img {
+  height: 100%; min-height: 300px;
+  border-bottom: none; border-right: 1px solid var(--line);
+}
+.project-featured .project-card-body { padding: 2.4rem 2.2rem; }
+.project-featured .project-name { font-size: 1.15rem; margin-bottom: 0.8rem; }
+.project-featured .project-desc { font-size: 0.87rem; }
+@media (max-width: 768px) {
+  .project-featured { grid-template-columns: 1fr; border-right: none; }
+  .project-featured .project-card-img { height: 220px; border-right: none; border-bottom: 1px solid var(--line); }
+}
+
 /* ── Fix Leaflet tile seam lines ── */
 .leaflet-tile { border: none !important; outline: none !important; }
 .leaflet-tile-container { border: none !important; }
@@ -1243,7 +1290,18 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
   const [selected, setSelected] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const contentRef = useRef(null);
+  const heroRef = useRef(null);
   const filtered = activeFilter === 'all' ? places : places.filter(p => p.type === activeFilter);
+
+  const handleHeroMouseMove = useCallback((e) => {
+    const el = heroRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (((e.clientX - rect.left) / rect.width) * 100).toFixed(1);
+    const y = (((e.clientY - rect.top) / rect.height) * 100).toFixed(1);
+    el.style.setProperty('--cx', `${x}%`);
+    el.style.setProperty('--cy', `${y}%`);
+  }, []);
   useScrollReveal(activeFilter);
 
   /* Parallax hero text on scroll */
@@ -1266,10 +1324,11 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
   return (
     <div style={{ minHeight: '100vh' }}>
       {/* FULL-VIEWPORT HERO */}
-      <section className="hero">
+      <section className="hero" ref={heroRef} onMouseMove={handleHeroMouseMove}>
         <div className="hero-map-wrap">
           <LeafletMap onMarkerClick={setSelected} darkMode={darkMode} />
         </div>
+        <div className="hero-cursor-glow" />
         <div className="hero-overlay" style={darkMode ? {} : {
           background: 'linear-gradient(180deg,rgba(253,249,245,0.78) 0%,rgba(253,249,245,0.38) 38%,rgba(253,249,245,0.32) 62%,rgba(253,249,245,0.82) 100%)'
         }} />
@@ -1453,7 +1512,7 @@ function ProjectsPage({ lang = 'en' }) {
           <div style={{ fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(1.4rem,2.5vw,1.9rem)', fontWeight:300, color:'var(--black)', marginBottom:'1.4rem' }} className="reveal">Selected <em style={{fontStyle:'italic',color:'var(--kohbai)'}}>Projects</em></div>
           <div className="projects-grid">
             {projects.map((p, i) => (
-              <div key={i} className="project-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+              <div key={i} className={'project-card reveal' + (i === 0 && p.img ? ' project-featured' : '')} style={{ transitionDelay: `${i * 0.07}s` }}>
                 {p.img && <img className="project-card-img" src={p.img} alt={p.name} loading="lazy" />}
                 <div className="project-card-body">
                   <div className="project-type">{p.type}</div>
@@ -1661,12 +1720,16 @@ function App() {
     return saved !== null ? saved === 'true' : true;
   });
   const toggleTheme = () => setDarkMode(d => { const next = !d; localStorage.setItem('yt-dark-mode', String(next)); return next; });
+  const [scrollPct, setScrollPct] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       if (page === 'places') {
         setNavGlass(window.scrollY < window.innerHeight * 0.65);
       }
+      const doc = document.documentElement;
+      const total = doc.scrollHeight - doc.clientHeight;
+      setScrollPct(total > 0 ? Math.min((window.scrollY / total) * 100, 100) : 0);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -1695,6 +1758,7 @@ function App() {
 
   return (
     <>
+      <div className="scroll-progress-bar" style={{ width: `${scrollPct}%` }} />
       <nav className={'nav' + (navGlass ? ' nav-glass' : '') + (navGlass && !darkMode ? ' day-mode' : '')}>
         <div className="nav-logo" onClick={() => goTo('places')}>Yuetong Ma</div>
         <ul className="nav-links">
@@ -1719,7 +1783,7 @@ function App() {
           <button className="mobile-lang-btn" onClick={toggleLang}>{T[lang].langToggle}</button>
         </div>
       </div>
-      {renderPage()}
+      <div key={page} className="page-content">{renderPage()}</div>
       {showBanner && <LangBanner lang={lang} onSwitch={() => { setLang('zh'); setShowBanner(false); }} onDismiss={() => setShowBanner(false)} />}
     </>
   );
