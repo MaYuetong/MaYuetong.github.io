@@ -5,9 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Yuetong Ma — Spatial Intelligence & AI Systems</title>
 <meta name="description" content="Yuetong Ma — Geopolitical Analyst & GIS Researcher. UN Secretariat (UNOCC/DPO), IAEA, Peking University. Spatial intelligence, AI systems, cartography." />
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://mayuetong.github.io/" />
+<meta property="og:title" content="Yuetong Ma — Spatial Intelligence & AI Systems" />
+<meta property="og:description" content="GIS Researcher & Geopolitical Analyst. UN Secretariat, IAEA/FAO, Peking University. Spatial intelligence, cartography, AI systems." />
+<meta property="og:image" content="https://mayuetong.github.io/other/portrait.jpg" />
+<meta property="og:image:width" content="900" />
+<meta property="og:image:height" content="900" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Yuetong Ma — Spatial Intelligence & AI Systems" />
+<meta name="twitter:description" content="GIS Researcher & Geopolitical Analyst. UN · IAEA · Peking University." />
+<meta name="twitter:image" content="https://mayuetong.github.io/other/portrait.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="icon" type="image/jpeg" href="avatar.jpg" />
 <link rel="apple-touch-icon" href="avatar.jpg" />
@@ -33,13 +45,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Instrument Sans', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   background: var(--white);
   color: var(--black);
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
 }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -147,6 +160,10 @@ user-select: none;
 .hero-map-wrap #places-map {
   width: 100%; height: 100%;
 }
+/* cinematic tint for dark map tiles */
+.hero-map-wrap.dark-tiles { filter: brightness(0.82) contrast(1.15) saturate(0.7); }
+/* subtle warm tint for light tiles */
+.hero-map-wrap.light-tiles { filter: brightness(0.92) saturate(0.65) sepia(0.08); }
 .hero-overlay {
   position: absolute; inset: 0; z-index: 1;
   background:
@@ -200,6 +217,17 @@ user-select: none;
   font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(255,255,255,0.22);
   animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 1.3s both;
+}
+.hero-now {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.38); margin-bottom: 1.1rem;
+  animation: heroFadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.05s both;
+}
+.hero-now::before {
+  content: ''; display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: #5eff8a;
+  box-shadow: 0 0 6px #5eff8a; flex-shrink: 0;
 }
 .hero-scroll {
   position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
@@ -687,6 +715,19 @@ user-select: none;
 }
 .contact-footer span { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
 
+/* ── RESUME BUTTON ── */
+.resume-btn {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 0.3rem 0.85rem;
+  border-radius: 4px; cursor: pointer; font-family: inherit;
+  text-decoration: none; transition: all 0.2s;
+  background: transparent; border: 1px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.8);
+}
+.resume-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.7); }
+.nav:not(.nav-glass) .resume-btn { border-color: rgba(0,0,0,0.2); color: var(--secondary); }
+.nav:not(.nav-glass) .resume-btn:hover { border-color: var(--black); color: var(--black); background: transparent; }
+
 /* ── LANG TOGGLE & BANNER ── */
 .lang-toggle {
   background: none; border: 1px solid rgba(255,255,255,0.32); color: rgba(255,255,255,0.72);
@@ -753,8 +794,12 @@ user-select: none;
   font-size: 1.15rem; font-weight: 500; color: var(--black);
   padding: 1rem 0; border-bottom: 1px solid var(--line);
   cursor: pointer; letter-spacing: 0.01em;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: color 0.18s;
 }
 .mobile-menu-link:last-of-type { border-bottom: none; }
+.mobile-menu-link.active { color: var(--kohbai); }
+.mobile-menu-link.active::after { content: '●'; font-size: 0.4rem; color: var(--kohbai); }
 .mobile-menu-lang {
   margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
   display: flex; align-items: center; justify-content: space-between;
@@ -899,6 +944,20 @@ user-select: none;
 .leaflet-tile-container { border: none !important; }
 img.leaflet-tile { box-shadow: none !important; margin: 0 !important; }
 
+/* ── MAP GLOW ARC (SVG overlay) ── */
+.map-arc-svg {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+}
+@keyframes arcDash {
+  from { stroke-dashoffset: 400; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes markerGlowPulse {
+  0%, 100% { box-shadow: 0 0 18px var(--mk-color), 0 0 40px rgba(225,107,140,0.6); }
+  50%       { box-shadow: 0 0 30px var(--mk-color), 0 0 60px rgba(225,107,140,0.9), 0 0 8px rgba(255,255,255,0.8); }
+}
+
+
 </style>
 </head>
 <body>
@@ -929,7 +988,7 @@ const places = [
   {
     id: 'beijing', name: 'Beijing', country: 'China',
     coordinates: [39.9042, 116.4074], years: '2017 – 2024', type: 'education',
-    img: 'places/beijing.png',
+    img: 'places/beijing.jpg',
     subtitle: 'Study hub & research base',
     tooltipSummary: 'PKU MSc Geography (2021–24, GPA 3.74, distinction) · BFU BSc Urban Forestry (2017–21, GPA 91/100) · CIECC Internship (2021) · NTL Resilience Research → EuroCarto 2024 First Prize',
     memory: 'Beijing is where I spent seven formative years — first studying urban forestry at Beijing Forestry University, then geography and cartography at Peking University. My research on night-time light data and disaster resilience earned First Prize at the European Cartographic Conference 2024.',
@@ -939,7 +998,7 @@ const places = [
   {
     id: 'stockholm', name: 'Stockholm', country: 'Sweden',
     coordinates: [59.3293, 18.0686], years: '2022 – 2023', type: 'education',
-    img: 'places/stockholm.png',
+    img: 'places/stockholm.jpg',
     subtitle: 'Exchange program & remote research',
     tooltipSummary: 'Stockholm University Exchange (2022–23) · Modules: Human Geography, Globalisation & Strategy · UNESCO WHITRAP Research Assistant (remote) — Climate Change & Heritage Conservation',
     memory: 'Stockholm introduced me to a European intellectual tradition focused on communication, social geography, and policy. I simultaneously worked remotely for UNESCO WHITRAP on the Metropolitan Heritage Project, studying how climate change affects heritage conservation through interdisciplinary geospatial methods.',
@@ -969,7 +1028,7 @@ const places = [
   {
     id: 'nyc', name: 'New York', country: 'United States',
     coordinates: [40.7128, -74.0060], years: '2025 – 2026', type: 'work',
-    img: 'other/newyork.png',
+    img: 'other/newyork.jpg',
     subtitle: 'UN Secretariat — AI & GIS for Peace Operations',
     tooltipSummary: 'UNOCC Geopolitical Analyst, UN Trainee (Nov 2025 – May 2026) · AI Agent system for geospatial intelligence · Automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks',
     memory: 'At the UN Secretariat\'s UNOCC I\'m designing AI-powered systems that translate unstructured geopolitical requests into executable GIS tasks — building the bridge between natural language and spatial intelligence at scale.',
@@ -979,7 +1038,7 @@ const places = [
   {
     id: 'sanfrancisco', name: 'San Francisco', country: 'United States',
     coordinates: [37.7749, -122.4194], years: 'Dec 2023', type: 'education',
-    img: 'places/US.PNG',
+    img: 'places/sf.jpg',
     subtitle: 'AGU Fall Meeting 2023',
     tooltipSummary: 'American Geophysical Union (AGU) Fall Meeting 2023 · One of the world\'s largest Earth & space science conferences · Presented geospatial & remote sensing research · ~25,000 attendees from 100+ countries',
     memory: 'AGU 2023 brought together the global Earth science community at Moscone Center. Attending sessions on remote sensing, night-time light data, and disaster resilience — the same threads running through my own research — made it vivid how interconnected the field is. Walking the city between sessions, the scale of the Pacific coastline felt like a fitting backdrop for thinking about planetary-scale data.',
@@ -989,7 +1048,7 @@ const places = [
   {
     id: 'shenzhen', name: 'Shenzhen', country: 'China',
     coordinates: [22.5431, 114.0579], years: '2025 – 2026', type: 'work',
-    img: 'other/shenzhen.png',
+    img: 'other/shenzhen.jpg',
     subtitle: 'DJI Innovation — Product Manager',
     tooltipSummary: 'DJI Product Manager, Technical Service Solutions (Feb 2025 – Mar 2026) · Service automation 0% → 75% · AI Agent-based service platform · North America logistics optimization: estimated −30% cost reduction',
     memory: 'DJI is where I brought spatial thinking and systems analysis into a commercial context at scale. Leading automated service workflow design, contributing to an AI Agent service platform, and building multi-objective optimization models for logistics networks.',
@@ -1154,7 +1213,7 @@ const experiences = [
 
 const projects = [
   { type: 'GIS Platform · Automation', name: 'UNOCC Basemap Generator', desc: 'Automated UN map production system for the UNOCC Watchroom. Converts country requests into standardized basemap PNGs via QGIS headless rendering, UNHCR GeoAPI data, and SMTP email delivery. Includes a web-based request form and admin dashboard.', outcome: 'Operational at UN Secretariat (DPO/UNOCC) · Covers 190+ countries · Used in daily peace operations briefings', tags: ['Python', 'QGIS', 'Leaflet.js', 'Supabase', 'SMTP'], github: 'https://github.com/MaYuetong/UNOCC-basemap-generator', img: 'projects/unocc-basemap.png' },
-  { type: 'GIS Platform · WebGIS', name: 'APH IAEA/FAO GIS Platform', desc: 'Multi-tenant geospatial platform for zoonotic epidemiology monitoring at the IAEA/FAO Joint Centre. Supports multi-country data layers (ACLED, HDX, food security), AI-assisted workflows, timeline analysis, and UN-standard map export.', outcome: 'Live & deployed · Used by IAEA/FAO epidemiology analysts · Multi-country disease monitoring', tags: ['FastAPI', 'Python', 'Leaflet.js', 'Supabase', 'ACLED API', 'HDX'], url: 'https://aph-gis-platform.vercel.app', img: 'projects/aph-platform.png' },
+  { type: 'GIS Platform · WebGIS', name: 'APH IAEA/FAO GIS Platform', desc: 'Multi-tenant geospatial platform for zoonotic epidemiology monitoring at the IAEA/FAO Joint Centre. Supports multi-country data layers (ACLED, HDX, food security), AI-assisted workflows, timeline analysis, and UN-standard map export.', outcome: 'Live & deployed · Used by IAEA/FAO epidemiology analysts · Multi-country disease monitoring', tags: ['FastAPI', 'Python', 'Leaflet.js', 'Supabase', 'ACLED API', 'HDX'], url: 'https://aph-gis-platform.vercel.app', img: 'projects/aph-platform.jpg' },
   { type: 'Research · Award', name: 'Regional Resilience & Night-Time Light Data', desc: 'Analysed NASA Black Marble NTL data to assess spatio-temporal resilience during Typhoon Mangkhut. Developed a patented method for dynamic pattern recognition using LightGBM + interpretable AI.', outcome: 'First Prize — European Cartographic Conference 2024 · 2 SCI Q1 papers under review · Patent filed', tags: ['Python', 'LightGBM', 'NASA Black Marble', 'Remote Sensing'] },
   { type: 'GIS Platform', name: 'IAEA Animal Health Monitoring Platform', desc: 'GIS-based platform enabling data upload, management, and geospatial visualization for zoonotic disease surveillance. Integrated spatial and temporal datasets at the IAEA/FAO Joint Centre.', outcome: 'Deployed at IAEA/FAO · Supports multi-country disease monitoring workflows', tags: ['ArcGIS', 'QGIS', 'WebGIS', 'Python'] },
   { type: 'AI + GIS', name: 'AI Agent GIS Pipeline — UNOCC', desc: 'AI Agent system to automatically identify geospatial information needs from unstructured peace operations text. Automated demand–task–operation pipeline converting requests into executable GIS tasks.', outcome: 'Operational at UN Secretariat, New York · Reduces manual analysis time', tags: ['AI Agents', 'NLP', 'Python', 'GIS Automation'] },
@@ -1197,7 +1256,7 @@ function PhotoUpload({ height, style = {}, defaultSrc = null }) {
   return (
     <div style={{ width:'100%', height: height||'100%', ...style, position:'relative', overflow:'hidden', display:'block' }}>
       {defaultSrc ? (
-        <img src={defaultSrc} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+        <img src={defaultSrc} alt="" loading="lazy" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
       ) : (
         <div style={{ width:'100%', height:'100%', background: style.background || 'var(--surface)' }} />
       )}
@@ -1216,8 +1275,8 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
     if (!mapInstanceRef.current) return;
     if (tileLayerRef.current) mapInstanceRef.current.removeLayer(tileLayerRef.current);
     const url = darkMode
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
     tileLayerRef.current = L.tileLayer(url, {
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd', maxZoom: 20,
@@ -1233,8 +1292,8 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
     });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     const initUrl = darkMode
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
     tileLayerRef.current = L.tileLayer(initUrl, {
       attribution: '© OpenStreetMap contributors © CARTO',
       subdomains: 'abcd', maxZoom: 20,
@@ -1243,26 +1302,35 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
     const byId = {};
     places.forEach(p => { byId[p.id] = p; });
 
+    /* Glowing arc connections — draw two layers: dim base + bright animated */
     arcConnections.forEach(([a,b]) => {
       const pA = byId[a], pB = byId[b];
       if (!pA || !pB) return;
-      L.polyline(createArc(pA.coordinates, pB.coordinates), {
-        color: 'rgba(244,167,185,0.35)', weight: 1.2,
-        dashArray: '5 8', interactive: false,
+      const pts = createArc(pA.coordinates, pB.coordinates);
+      /* Base glow */
+      L.polyline(pts, {
+        color: 'rgba(244,167,185,0.18)', weight: 3,
+        interactive: false, smoothFactor: 1,
+      }).addTo(map);
+      /* Bright center line */
+      L.polyline(pts, {
+        color: 'rgba(244,167,185,0.72)', weight: 1,
+        dashArray: '6 10', interactive: false, smoothFactor: 1,
       }).addTo(map);
     });
 
-    places.forEach(place => {
+    places.forEach((place, idx) => {
       const isWork = place.type === 'work';
       const color = isWork ? '#E16B8C' : '#DC9FB4';
+      const delay = (idx * 0.4).toFixed(1);
       const icon = L.divIcon({
         className: '',
-        html: `<div style="position:relative;width:38px;height:38px">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;background:${color};border-radius:50%;box-shadow:0 0 16px ${color},0 0 32px rgba(225,107,140,0.55),0 0 6px rgba(255,255,255,0.6)"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(225,107,140,0.45);animation:mapPulse 2.8s ease-out infinite"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;border:1px solid rgba(225,107,140,0.25);animation:mapPulse 2.8s ease-out 0.95s infinite"></div>
+        html: `<div style="position:relative;width:46px;height:46px">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:${color};border-radius:50%;box-shadow:0 0 20px ${color},0 0 40px rgba(225,107,140,0.7),0 0 8px rgba(255,255,255,0.8)"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(225,107,140,0.5);animation:mapPulse 2.8s ease-out ${delay}s infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(244,167,185,0.28);animation:mapPulse 2.8s ease-out ${(parseFloat(delay)+1.2).toFixed(1)}s infinite"></div>
         </div>`,
-        iconSize: [38, 38], iconAnchor: [19, 19],
+        iconSize: [46, 46], iconAnchor: [23, 23],
       });
       const tooltipHtml = `<div class="rich-tooltip-inner">
         <div class="rt-city">${place.name}</div>
@@ -1349,7 +1417,7 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
     <div style={{ minHeight: '100vh' }}>
       {/* FULL-VIEWPORT HERO */}
       <section className="hero" ref={heroRef} onMouseMove={handleHeroMouseMove}>
-        <div className="hero-map-wrap">
+        <div className={`hero-map-wrap ${darkMode ? 'dark-tiles' : 'light-tiles'}`}>
           <LeafletMap onMarkerClick={setSelected} darkMode={darkMode} />
         </div>
         <div className="hero-cursor-glow" />
@@ -1357,6 +1425,7 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
           background: 'linear-gradient(to top right, rgba(253,249,245,0.82) 0%, rgba(253,249,245,0.22) 42%, transparent 65%), linear-gradient(180deg, rgba(253,249,245,0.42) 0%, transparent 18%)'
         }} />
         <div className="hero-content" ref={contentRef}>
+          <div className="hero-now" style={!darkMode ? {color:'rgba(30,20,25,0.5)'} : {}}>{lang === 'zh' ? '当前 · 纽约 · 构建空间智能系统' : 'Currently in New York · Building spatial intelligence systems'}</div>
           <div className="hero-eyebrow" style={!darkMode ? {color:'var(--kohbai)'} : {}}>{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
           <h1 className="hero-name" style={!darkMode ? {color:'var(--black)'} : {}}>Yuetong<br /><em>Ma</em></h1>
           <div className="hero-divider" />
@@ -1421,7 +1490,7 @@ function AboutPage({ lang = 'en' }) {
         <div className="about-grid">
           <div className="reveal-left">
             <div className="about-portrait-wrap">
-              <PhotoUpload storageKey="portrait" height={373} placeholderText="Add Portrait" style={{ background: '#F0EDE8' }} defaultSrc="other/个人照片self-potriat.JPG" />
+              <PhotoUpload storageKey="portrait" height={373} placeholderText="Add Portrait" style={{ background: '#F0EDE8' }} defaultSrc="other/portrait.jpg" />
             </div>
           </div>
           <div className="about-text reveal">
@@ -1463,6 +1532,20 @@ function AboutPage({ lang = 'en' }) {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="reveal" style={{ marginTop:'4rem', paddingTop:'2.5rem', borderTop:'1px solid var(--line)', textAlign:'center' }}>
+          <p style={{ fontSize:'0.88rem', color:'var(--secondary)', marginBottom:'1.1rem' }}>
+            {lang === 'zh' ? '感谢阅读。如果你想交流，欢迎联系。' : 'Thank you for reading. If you'd like to connect —'}
+          </p>
+          <a href="mailto:yuetongma0107@gmail.com"
+            style={{ display:'inline-flex', alignItems:'center', gap:'0.4rem', fontSize:'0.8rem', fontWeight:600,
+              letterSpacing:'0.08em', textTransform:'uppercase', color:'var(--black)',
+              borderBottom:'1.5px solid var(--black)', paddingBottom:'2px', transition:'opacity 0.2s' }}
+            onMouseEnter={e => e.target.style.opacity='0.55'}
+            onMouseLeave={e => e.target.style.opacity='1'}>
+            {lang === 'zh' ? '发送邮件 →' : 'Get in touch →'}
+          </a>
         </div>
       </div>
     </div>
@@ -1709,7 +1792,7 @@ function OtherPage({ lang = 'en' }) {
           {otherItems.map((item, i) => (
             <div key={item.key} className="place-card reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
               <div className="place-card-img-wrap">
-                <img src={item.img} alt={lang === 'zh' ? item.titleZh : item.titleEn}
+                <img src={item.img} alt={lang === 'zh' ? item.titleZh : item.titleEn} loading="lazy"
                   style={{ width:'100%', height:'200px', objectFit:'cover', display:'block' }} />
               </div>
               <div className="place-card-info">
@@ -1786,12 +1869,17 @@ function App() {
       <nav className={'nav' + (navGlass ? ' nav-glass' : '') + (navGlass && !darkMode ? ' day-mode' : '')}>
         <ul className="nav-links">
           {navPages.map(p => (
-            <li key={p.id} className={'nav-link' + (page === p.id ? ' active' : '')} onClick={() => setPage(p.id)}>
+            <li key={p.id} className={'nav-link' + (page === p.id ? ' active' : '')}
+              onClick={() => setPage(p.id)}
+              tabIndex={0}
+              onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setPage(p.id)}
+              role="button" aria-current={page === p.id ? 'page' : undefined}>
               {T[lang].nav[p.id]}
             </li>
           ))}
         </ul>
         <div className="nav-right">
+          <a href="resume/resume.html" target="_blank" rel="noopener" className="resume-btn">CV ↗</a>
           <button className="theme-toggle" onClick={toggleTheme} title={darkMode ? 'Switch to day mode' : 'Switch to night mode'}>{darkMode ? '☀ Day' : '☾ Night'}</button>
           <button className="lang-toggle" onClick={toggleLang}>{T[lang].langToggle}</button>
           <button className="hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
@@ -1801,7 +1889,7 @@ function App() {
       </nav>
       <div className={'mobile-menu' + (menuOpen ? ' open' : '')}>
         {navPages.map(p => (
-          <div key={p.id} className="mobile-menu-link" onClick={() => goTo(p.id)}>{T[lang].nav[p.id]}</div>
+          <div key={p.id} className={'mobile-menu-link' + (page === p.id ? ' active' : '')} onClick={() => goTo(p.id)}>{T[lang].nav[p.id]}</div>
         ))}
         <div className="mobile-menu-lang">
           <span>{lang === 'zh' ? '语言' : 'Language'}</span>
