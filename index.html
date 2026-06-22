@@ -905,7 +905,7 @@ button { cursor: pointer; font-family: inherit; }
   position: absolute; inset: 0; z-index: 1;
   pointer-events: none;
   background: radial-gradient(700px circle at var(--cx, -200%) var(--cy, 50%),
-    rgba(180,180,180,0.10), transparent 55%);
+    rgba(244,167,185,0.12), transparent 55%);
   transition: background 0.04s;
 }
 
@@ -952,10 +952,44 @@ img.leaflet-tile { box-shadow: none !important; margin: 0 !important; }
   to   { stroke-dashoffset: 0; }
 }
 @keyframes markerGlowPulse {
-  0%, 100% { box-shadow: 0 0 18px var(--mk-color), 0 0 40px rgba(120,120,120,0.5); }
-  50%       { box-shadow: 0 0 30px var(--mk-color), 0 0 60px rgba(120,120,120,0.75), 0 0 8px rgba(255,255,255,0.6); }
+  0%, 100% { box-shadow: 0 0 18px var(--mk-color), 0 0 40px rgba(225,107,140,0.6); }
+  50%       { box-shadow: 0 0 30px var(--mk-color), 0 0 60px rgba(225,107,140,0.9), 0 0 8px rgba(255,255,255,0.8); }
 }
 
+/* ── CONTACT ACCENT OVERRIDE ── */
+.contact-page { --accent: #c86e3e; }
+.contact-input:focus, .contact-textarea:focus { border-color: rgba(200,110,62,0.55); }
+
+/* ── CUSTOM CURSOR ── */
+@media (pointer: fine) { body { cursor: none; } input, textarea, select { cursor: text; } }
+.cursor-dot {
+  position: fixed; top: 0; left: 0; width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.85); pointer-events: none; z-index: 10001;
+  will-change: transform;
+}
+.cursor-ring {
+  position: fixed; top: 0; left: 0; width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.22); pointer-events: none; z-index: 10000;
+  will-change: transform;
+}
+@media (max-width: 900px) { .cursor-dot, .cursor-ring { display: none; } body { cursor: auto !important; } }
+
+/* ── NAV MAGNETIC ── */
+.nav-link { transition: color 0.2s, border-bottom-color 0.2s, transform 0.5s cubic-bezier(0.23,1,0.32,1); }
+
+/* ── PLACE CARD TILT ── */
+.place-card { transform-style: preserve-3d; transition: transform 0.12s ease; }
+.place-card:hover { transition: none; }
+.place-card-info { transform: translateZ(20px); }
+
+/* ── SHIMMER SUBMIT ── */
+.contact-submit { position: relative; overflow: hidden; }
+.contact-submit::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 55%; height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+  transform: translateX(-150%); transition: transform 0.55s ease; pointer-events: none;
+}
+.contact-submit:hover::after { transform: translateX(270%); }
 
 </style>
 </head>
@@ -1308,26 +1342,26 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
       const pts = createArc(pA.coordinates, pB.coordinates);
       /* Base glow */
       L.polyline(pts, {
-        color: 'rgba(140,140,140,0.20)', weight: 3,
+        color: 'rgba(244,167,185,0.18)', weight: 3,
         interactive: false, smoothFactor: 1,
       }).addTo(map);
       /* Bright center line */
       L.polyline(pts, {
-        color: 'rgba(140,140,140,0.65)', weight: 1,
+        color: 'rgba(244,167,185,0.72)', weight: 1,
         dashArray: '6 10', interactive: false, smoothFactor: 1,
       }).addTo(map);
     });
 
     places.forEach((place, idx) => {
       const isWork = place.type === 'work';
-      const color = isWork ? '#555555' : '#888888';
+      const color = isWork ? '#E16B8C' : '#DC9FB4';
       const delay = (idx * 0.4).toFixed(1);
       const icon = L.divIcon({
         className: '',
         html: `<div style="position:relative;width:46px;height:46px">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:${color};border-radius:50%;box-shadow:0 0 20px ${color},0 0 40px rgba(100,100,100,0.5),0 0 8px rgba(255,255,255,0.6)"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(120,120,120,0.45);animation:mapPulse 2.8s ease-out ${delay}s infinite"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(140,140,140,0.22);animation:mapPulse 2.8s ease-out ${(parseFloat(delay)+1.2).toFixed(1)}s infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:${color};border-radius:50%;box-shadow:0 0 20px ${color},0 0 40px rgba(225,107,140,0.7),0 0 8px rgba(255,255,255,0.8)"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(225,107,140,0.5);animation:mapPulse 2.8s ease-out ${delay}s infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(244,167,185,0.28);animation:mapPulse 2.8s ease-out ${(parseFloat(delay)+1.2).toFixed(1)}s infinite"></div>
         </div>`,
         iconSize: [46, 46], iconAnchor: [23, 23],
       });
@@ -1374,6 +1408,26 @@ function PlaceModal({ place, onClose }) {
       </div>
     </div>
   );
+}
+
+/* ── ScrambleText ── */
+function ScrambleText({ text }) {
+  const [display, setDisplay] = useState(text);
+  useEffect(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·—';
+    let frame = 0, resolved = 0;
+    const id = setInterval(() => {
+      setDisplay(text.split('').map((ch, i) => {
+        if (i < resolved) return ch;
+        if (ch === ' ') return ' ';
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join(''));
+      if (++frame % 2 === 0) resolved++;
+      if (resolved >= text.length) { clearInterval(id); setDisplay(text); }
+    }, 38);
+    return () => clearInterval(id);
+  }, [text]);
+  return <>{display}</>;
 }
 
 /* ── PlacesPage ── */
@@ -1426,7 +1480,7 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
         <div className="hero-content" ref={contentRef}>
           <div className="hero-now" style={!darkMode ? {color:'rgba(30,20,25,0.5)'} : {}}>{lang === 'zh' ? '当前 · 纽约 · 构建空间智能系统' : 'Currently in New York · Building spatial intelligence systems'}</div>
           <div className="hero-eyebrow" style={!darkMode ? {color:'var(--accent)'} : {}}>{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
-          <h1 className="hero-name" style={!darkMode ? {color:'var(--black)'} : {}}>Yuetong<br /><em>Ma</em></h1>
+          <h1 className="hero-name" style={!darkMode ? {color:'var(--black)'} : {}}><ScrambleText text="Yuetong" /><br /><em>Ma</em></h1>
           <div className="hero-divider" />
           <p className="hero-tagline" style={!darkMode ? {color:'rgba(30,20,25,0.58)'} : {}}>{T[lang].hero.tagline}</p>
           <div className="hero-cities" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}}>New York · Vienna · Faisalabad · Shenzhen · Beijing · Stockholm</div>
@@ -1455,7 +1509,16 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
           </div>
           <div className="places-grid">
             {filtered.map((place, i) => (
-              <div key={place.id} className="place-card reveal" style={{ transitionDelay: `${i * 0.06}s` }} onClick={() => setSelected(place)}>
+              <div key={place.id} className="place-card reveal" style={{ transitionDelay: `${i * 0.06}s` }} onClick={() => setSelected(place)}
+                onMouseMove={e => {
+                  const el = e.currentTarget;
+                  const { left, top, width, height } = el.getBoundingClientRect();
+                  const x = ((e.clientX - left) / width - 0.5) * 16;
+                  const y = ((e.clientY - top) / height - 0.5) * -16;
+                  el.style.transform = `perspective(700px) rotateX(${y}deg) rotateY(${x}deg) scale(1.03)`;
+                }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; }}
+              >
                 <div className="place-card-img-wrap">
                   <div className={'place-type-badge badge-' + place.type}>{place.type}</div>
                   <PhotoUpload storageKey={place.id} height={200} placeholderText="Add Photo" style={{ background: place.gradient }} defaultSrc={place.img || null} />
@@ -1826,6 +1889,41 @@ function App() {
     return saved !== null ? saved === 'true' : true;
   });
   const toggleTheme = () => setDarkMode(d => { const next = !d; localStorage.setItem('yt-dark-mode', String(next)); return next; });
+
+  /* ── Custom cursor ── */
+  useEffect(() => {
+    if (!window.matchMedia('(pointer: fine)').matches) return;
+    const dot = document.createElement('div');
+    const ring = document.createElement('div');
+    dot.className = 'cursor-dot'; ring.className = 'cursor-ring';
+    document.body.appendChild(dot); document.body.appendChild(ring);
+    let tx = -100, ty = -100, mx = -100, my = -100, raf;
+    const onMove = (e) => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx - 2.5}px,${my - 2.5}px)`;
+    };
+    const tick = () => {
+      tx += (mx - tx) * 0.10; ty += (my - ty) * 0.10;
+      ring.style.transform = `translate(${tx - 17}px,${ty - 17}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(raf);
+      dot.remove(); ring.remove();
+    };
+  }, []);
+
+  /* ── Cursor theme (dark/light) ── */
+  useEffect(() => {
+    const dot = document.querySelector('.cursor-dot');
+    const ring = document.querySelector('.cursor-ring');
+    if (!dot || !ring) return;
+    dot.style.background = darkMode ? 'rgba(255,255,255,0.85)' : 'rgba(20,20,20,0.9)';
+    ring.style.borderColor = darkMode ? 'rgba(255,255,255,0.22)' : 'rgba(20,20,20,0.22)';
+  }, [darkMode]);;
   const [scrollPct, setScrollPct] = useState(0);
 
   useEffect(() => {
@@ -1872,7 +1970,15 @@ function App() {
               onClick={() => setPage(p.id)}
               tabIndex={0}
               onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setPage(p.id)}
-              role="button" aria-current={page === p.id ? 'page' : undefined}>
+              role="button" aria-current={page === p.id ? 'page' : undefined}
+              onMouseMove={e => {
+                const el = e.currentTarget;
+                const { left, top, width, height } = el.getBoundingClientRect();
+                const x = (e.clientX - left - width / 2) * 0.22;
+                const y = (e.clientY - top - height / 2) * 0.22;
+                el.style.transform = `translate(${x}px,${y}px)`;
+              }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; }}>
               {T[lang].nav[p.id]}
             </li>
           ))}
