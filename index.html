@@ -31,14 +31,14 @@
   --white: #ffffff;
   --surface: #f9f7f4;
   --line: #e8e3dc;
-  --accent: #c86e3e;
-  --accent-mid: #a85830;
-  --accent-light: #f0d8cc;
-  --accent-xlight: #faf1ec;
-  --accent-rgb: 200,110,62;
-  --dark-bg: #141210;
-  --dark-mid: #1e1a16;
-  --dark2: #2a2420;
+  --accent: #1a1a1a;
+  --accent-mid: #333333;
+  --accent-light: #e5e3df;
+  --accent-xlight: #f6f5f3;
+  --accent-rgb: 26,26,26;
+  --dark-bg: #131313;
+  --dark-mid: #1c1c1c;
+  --dark2: #252525;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -905,7 +905,7 @@ button { cursor: pointer; font-family: inherit; }
   position: absolute; inset: 0; z-index: 1;
   pointer-events: none;
   background: radial-gradient(700px circle at var(--cx, -200%) var(--cy, 50%),
-    rgba(244,167,185,0.12), transparent 55%);
+    rgba(180,180,180,0.10), transparent 55%);
   transition: background 0.04s;
 }
 
@@ -952,8 +952,8 @@ img.leaflet-tile { box-shadow: none !important; margin: 0 !important; }
   to   { stroke-dashoffset: 0; }
 }
 @keyframes markerGlowPulse {
-  0%, 100% { box-shadow: 0 0 18px var(--mk-color), 0 0 40px rgba(225,107,140,0.6); }
-  50%       { box-shadow: 0 0 30px var(--mk-color), 0 0 60px rgba(225,107,140,0.9), 0 0 8px rgba(255,255,255,0.8); }
+  0%, 100% { box-shadow: 0 0 18px var(--mk-color), 0 0 40px rgba(120,120,120,0.5); }
+  50%       { box-shadow: 0 0 30px var(--mk-color), 0 0 60px rgba(120,120,120,0.75), 0 0 8px rgba(255,255,255,0.6); }
 }
 
 
@@ -1088,7 +1088,7 @@ const LOGOS = {
 const LOGO_INITIALS = {
   stockholm: { text: 'SU', color: '#002F5F' },  // fallback only
   bfu:       { text: '北林', color: '#1a5c2a' },
-  ciecc:     { text: 'CIECC', color: '#a85830' },
+  ciecc:     { text: 'CIECC', color: '#444444' },
 };
 
 const ORG_URLS = {
@@ -1308,26 +1308,26 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
       const pts = createArc(pA.coordinates, pB.coordinates);
       /* Base glow */
       L.polyline(pts, {
-        color: 'rgba(244,167,185,0.18)', weight: 3,
+        color: 'rgba(140,140,140,0.20)', weight: 3,
         interactive: false, smoothFactor: 1,
       }).addTo(map);
       /* Bright center line */
       L.polyline(pts, {
-        color: 'rgba(244,167,185,0.72)', weight: 1,
+        color: 'rgba(140,140,140,0.65)', weight: 1,
         dashArray: '6 10', interactive: false, smoothFactor: 1,
       }).addTo(map);
     });
 
     places.forEach((place, idx) => {
       const isWork = place.type === 'work';
-      const color = isWork ? '#E16B8C' : '#DC9FB4';
+      const color = isWork ? '#555555' : '#888888';
       const delay = (idx * 0.4).toFixed(1);
       const icon = L.divIcon({
         className: '',
         html: `<div style="position:relative;width:46px;height:46px">
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:${color};border-radius:50%;box-shadow:0 0 20px ${color},0 0 40px rgba(225,107,140,0.7),0 0 8px rgba(255,255,255,0.8)"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(225,107,140,0.5);animation:mapPulse 2.8s ease-out ${delay}s infinite"></div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(244,167,185,0.28);animation:mapPulse 2.8s ease-out ${(parseFloat(delay)+1.2).toFixed(1)}s infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:${color};border-radius:50%;box-shadow:0 0 20px ${color},0 0 40px rgba(100,100,100,0.5),0 0 8px rgba(255,255,255,0.6)"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(120,120,120,0.45);animation:mapPulse 2.8s ease-out ${delay}s infinite"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:1px solid rgba(140,140,140,0.22);animation:mapPulse 2.8s ease-out ${(parseFloat(delay)+1.2).toFixed(1)}s infinite"></div>
         </div>`,
         iconSize: [46, 46], iconAnchor: [23, 23],
       });
@@ -1499,7 +1499,7 @@ function AboutPage({ lang = 'en' }) {
             <p>{a.p2}</p>
             <p>{a.p3.split('Silora Orient').map((part, i, arr) =>
               i < arr.length - 1
-                ? <React.Fragment key={i}>{part}<a href="https://silora-orient.vercel.app" target="_blank" rel="noopener" style={{color:'var(--accent)',borderBottom:'1px solid rgba(225,107,140,0.35)',paddingBottom:'1px',transition:'border-color 0.2s'}}>Silora Orient</a></React.Fragment>
+                ? <React.Fragment key={i}>{part}<a href="https://silora-orient.vercel.app" target="_blank" rel="noopener" style={{color:'var(--accent)',borderBottom:'1px solid rgba(0,0,0,0.3)',paddingBottom:'1px',transition:'border-color 0.2s'}}>Silora Orient</a></React.Fragment>
                 : part
             )}</p>
             {a.p4 && <p>{a.p4}</p>}
