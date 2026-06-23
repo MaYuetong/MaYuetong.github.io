@@ -7,8 +7,8 @@ Thumbs.db
 # Business card / offline files (not part of website)
 business_card*
 make_*.py
-"name card/"
-"name card (1).*"
+name card/
+name card (1).*
 *.pptx
 *.pdf
 
