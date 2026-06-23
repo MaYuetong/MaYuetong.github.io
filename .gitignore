@@ -1,0 +1,20 @@
+.vercel
+
+# System
+.DS_Store
+Thumbs.db
+
+# Business card / offline files (not part of website)
+business_card*
+make_*.py
+"name card/"
+"name card (1).*"
+*.pptx
+*.pdf
+
+# Raw background images
+底图*.png
+底图白天模式*.png
+个人照片*.JPG
+个人照片*.jpg
+avatar.jpg
