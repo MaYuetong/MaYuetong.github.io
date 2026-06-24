@@ -16,6 +16,27 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Language toggle */
+  html[lang="zh"] .en { display: none !important; }
+  html[lang="en"] .zh { display: none !important; }
+
+  .lang-toggle {
+    position: fixed;
+    top: 16px; right: 20px;
+    background: #1d1d1f;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background 0.18s;
+    z-index: 100;
+  }
+  .lang-toggle:hover { background: #3a3a3c; }
+
   .page {
     max-width: 794px;
     margin: 0 auto;
@@ -250,24 +271,34 @@
     html, body { background: white; }
     .page { padding: 28px 36px; max-width: 100%; }
     a { color: #1d1d1f !important; }
+    .lang-toggle { display: none; }
   }
 </style>
 </head>
 <body>
+
+<button class="lang-toggle" id="lang-btn" onclick="toggleLang()">中文</button>
+
 <div class="page">
 
   <!-- HEADER -->
   <div class="header">
-    <div class="header-name">Yuetong Ma</div>
-    <div class="header-title">Geopolitical Analyst · GIS Researcher · AI Systems · UN Secretariat</div>
+    <div class="header-name">
+      <span class="en">Yuetong Ma</span>
+      <span class="zh">马玥桐</span>
+    </div>
+    <div class="header-title">
+      <span class="en">Geopolitical Analyst · GIS Researcher · AI Systems · UN Secretariat</span>
+      <span class="zh">地缘政治分析师 · GIS研究员 · AI系统 · 联合国秘书处</span>
+    </div>
     <div class="header-contact">
       <span>joannasoo@163.com</span>
       <span class="header-dot">·</span>
-      <a href="https://arcg.is/j9qHv" target="_blank">Spatial Portfolio ↗</a>
+      <a href="https://mayuetong.github.io" target="_blank">mayuetong.github.io ↗</a>
+      <span class="header-dot">·</span>
+      <a href="https://arcg.is/j9qHv" target="_blank"><span class="en">Spatial Portfolio ↗</span><span class="zh">空间作品集 ↗</span></a>
       <span class="header-dot">·</span>
       <a href="https://www.linkedin.com/in/yuetong-ma-a2258324b/" target="_blank">LinkedIn ↗</a>
-      <span class="header-dot">·</span>
-      <span>Personal Website: <em>[add URL when hosted]</em></span>
     </div>
   </div>
 
@@ -275,9 +306,10 @@
 
   <!-- SUMMARY -->
   <div class="section">
-    <div class="section-label">Summary</div>
+    <div class="section-label"><span class="en">Summary</span><span class="zh">个人简介</span></div>
     <div class="summary">
-      GIS researcher and geospatial systems designer with experience across the UN system (UNOCC/DPO, IAEA/FAO), academic research, and commercial product management. Builds AI-driven spatial intelligence pipelines, WebGIS platforms, and decision-support tools. MSc Geography, Peking University (GPA 3.74, distinction). First Prize, European Cartographic Conference 2024.
+      <span class="en">GIS researcher and geospatial systems designer with experience across the UN system (UNOCC/DPO, IAEA/FAO), academic research, and commercial product management. Builds AI-driven spatial intelligence pipelines, WebGIS platforms, and decision-support tools. MSc Geography, Peking University (GPA 3.74, distinction). First Prize, European Cartographic Conference 2024.</span>
+      <span class="zh">GIS研究员与地理空间系统设计师，具备联合国体系（UNOCC/DPO、IAEA/FAO）、学术研究及商业产品管理的跨领域经验。专注构建AI驱动的空间智能流水线、WebGIS平台与决策支持工具。北京大学地理学硕士（GPA 3.74，优异）。2024年欧洲制图大会（EuroCarto）一等奖。</span>
     </div>
   </div>
 
@@ -285,76 +317,154 @@
 
   <!-- EXPERIENCE -->
   <div class="section">
-    <div class="section-label">Experience</div>
+    <div class="section-label"><span class="en">Experience</span><span class="zh">工作经历</span></div>
 
-    <!-- UN UNOCC — FIRST -->
+    <!-- UN UNOCC -->
     <div class="exp-item">
       <div class="exp-header">
-        <div class="exp-org">UN Secretariat — Dept. of Peace Operations (DPO), UNOCC</div>
+        <div class="exp-org">
+          <span class="en">UN Secretariat — Dept. of Peace Operations (DPO), UNOCC</span>
+          <span class="zh">联合国秘书处 — 和平行动部（DPO），UNOCC</span>
+        </div>
         <div class="exp-date">11/2025 – 05/2026</div>
       </div>
-      <div class="exp-role">Geopolitical Analyst (UN Trainee)</div>
-      <div class="exp-location">New York, USA (Hybrid)</div>
+      <div class="exp-role">
+        <span class="en">Geopolitical Analyst (UN Trainee)</span>
+        <span class="zh">地缘政治分析师（联合国实习生）</span>
+      </div>
+      <div class="exp-location">
+        <span class="en">New York, USA (Hybrid)</span>
+        <span class="zh">纽约，美国（混合办公）</span>
+      </div>
       <ul class="exp-bullets">
-        <li>Designed an AI Agent-based system to automatically identify geospatial information needs related to peace and political affairs across global UN operations.</li>
-        <li>Developed an automated "demand–task–operation" pipeline converting unstructured requests into executable GIS tasks, reducing manual handoff time across analytical workflows.</li>
+        <li>
+          <span class="en">Designed an AI Agent-based system to automatically identify geospatial information needs related to peace and political affairs across global UN operations.</span>
+          <span class="zh">设计基于AI Agent的系统，自动识别全球联合国行动中与和平及政治事务相关的地理空间信息需求。</span>
+        </li>
+        <li>
+          <span class="en">Developed an automated "demand–task–operation" pipeline converting unstructured requests into executable GIS tasks, reducing manual handoff time across analytical workflows.</span>
+          <span class="zh">开发"需求—任务—执行"自动化流水线，将非结构化请求转化为可执行GIS任务，显著降低分析工作流中的人工交接时间。</span>
+        </li>
       </ul>
     </div>
 
     <!-- DJI -->
     <div class="exp-item">
       <div class="exp-header">
-        <div class="exp-org">DJI Innovation (Shenzhen DJI Sciences and Technologies Ltd.)</div>
+        <div class="exp-org">
+          <span class="en">DJI Innovation (Shenzhen DJI Sciences and Technologies Ltd.)</span>
+          <span class="zh">大疆创新（深圳市大疆创新科技有限公司）</span>
+        </div>
         <div class="exp-date">02/2025 – 03/2026</div>
       </div>
-      <div class="exp-role">Product Manager — Technical Service Solutions</div>
-      <div class="exp-location">Shenzhen, China</div>
+      <div class="exp-role">
+        <span class="en">Product Manager — Technical Service Solutions</span>
+        <span class="zh">产品经理 — 技术服务解决方案</span>
+      </div>
+      <div class="exp-location">
+        <span class="en">Shenzhen, China</span>
+        <span class="zh">深圳，中国</span>
+      </div>
       <ul class="exp-bullets">
-        <li>Led end-to-end design of an automated service delivery workflow; improved response efficiency by 40% and increased automation rate from 0% to 75% using CRM, LMS, and RMS systems.</li>
-        <li>Contributed to an AI Agent-based service platform integrating AI customer service and automated damage assessment.</li>
-        <li>Built a multi-objective optimization model for the North America warehouse network; proposed cost-saving scenarios with estimated 30% reduction in logistics costs.</li>
+        <li>
+          <span class="en">Led end-to-end design of an automated service delivery workflow; improved response efficiency by 40% and increased automation rate from 0% to 75% using CRM, LMS, and RMS systems.</span>
+          <span class="zh">主导自动化服务交付流程的端到端设计，响应效率提升40%，借助CRM、LMS、RMS系统将自动化率从0%提升至75%。</span>
+        </li>
+        <li>
+          <span class="en">Contributed to an AI Agent-based service platform integrating AI customer service and automated damage assessment.</span>
+          <span class="zh">参与构建融合AI客服与自动化损伤评估的AI Agent服务平台。</span>
+        </li>
+        <li>
+          <span class="en">Built a multi-objective optimization model for the North America warehouse network; proposed cost-saving scenarios with estimated 30% reduction in logistics costs.</span>
+          <span class="zh">建立北美仓网多目标优化模型，提出预计降低30%物流成本的节约方案。</span>
+        </li>
       </ul>
     </div>
 
     <!-- IAEA GIS Trainer -->
     <div class="exp-item">
       <div class="exp-header">
-        <div class="exp-org">International Atomic Energy Agency (IAEA)</div>
+        <div class="exp-org">
+          <span class="en">International Atomic Energy Agency (IAEA)</span>
+          <span class="zh">国际原子能机构（IAEA）</span>
+        </div>
         <div class="exp-date">08/2025</div>
       </div>
-      <div class="exp-role">Regional GIS Trainer & Technical Expert (SSA)</div>
-      <div class="exp-location">Faisalabad, Pakistan</div>
+      <div class="exp-role">
+        <span class="en">Regional GIS Trainer & Technical Expert (SSA)</span>
+        <span class="zh">区域GIS培训师及技术专家（SSA）</span>
+      </div>
+      <div class="exp-location">
+        <span class="en">Faisalabad, Pakistan</span>
+        <span class="zh">费萨拉巴德，巴基斯坦</span>
+      </div>
       <ul class="exp-bullets">
-        <li>Designed and delivered training on open-source geo-visualization tools for vector-borne disease and animal health monitoring; prepared technical documentation per IAEA standards.</li>
-        <li>Led hands-on sessions for government officials and researchers from the Middle East, Africa, and Southeast Asia covering CRS, symbology, heatmaps, buffers, animations, and map publishing.</li>
+        <li>
+          <span class="en">Designed and delivered training on open-source geo-visualization tools for vector-borne disease and animal health monitoring; prepared technical documentation per IAEA standards.</span>
+          <span class="zh">设计并开展媒介传播疾病与动物健康监测的开源地理可视化工具培训，按IAEA标准编制技术文档。</span>
+        </li>
+        <li>
+          <span class="en">Led hands-on sessions for government officials and researchers from the Middle East, Africa, and Southeast Asia covering CRS, symbology, heatmaps, buffers, animations, and map publishing.</span>
+          <span class="zh">为来自中东、非洲及东南亚的政府官员和研究人员主持实操课程，涵盖坐标系、符号系统、热力图、缓冲区、动画及地图发布等内容。</span>
+        </li>
       </ul>
     </div>
 
     <!-- IAEA Trainee -->
     <div class="exp-item">
       <div class="exp-header">
-        <div class="exp-org">IAEA / FAO Joint Centre</div>
+        <div class="exp-org">
+          <span class="en">IAEA / FAO Joint Centre</span>
+          <span class="zh">IAEA/FAO联合中心</span>
+        </div>
         <div class="exp-date">01/2024 – 01/2025</div>
       </div>
-      <div class="exp-role">Trainee — WebGIS Developer & Data Analyst / Project Assistant</div>
-      <div class="exp-location">Vienna, Austria</div>
+      <div class="exp-role">
+        <span class="en">Trainee — WebGIS Developer & Data Analyst / Project Assistant</span>
+        <span class="zh">实习生 — WebGIS开发工程师及数据分析师/项目助理</span>
+      </div>
+      <div class="exp-location">
+        <span class="en">Vienna, Austria</span>
+        <span class="zh">维也纳，奥地利</span>
+      </div>
       <ul class="exp-bullets">
-        <li>Developed a GIS-based animal health monitoring platform enabling data upload, management, and geospatial visualization; integrated spatial and temporal datasets to improve zoonotic disease surveillance workflows.</li>
-        <li>Produced thematic maps and visual products for the IAEA General Conference and annual reports; drafted project progress reports highlighting best practices and impact.</li>
-        <li>Developed and delivered GIS training materials for agricultural and veterinary applications.</li>
+        <li>
+          <span class="en">Developed a GIS-based animal health monitoring platform enabling data upload, management, and geospatial visualization; integrated spatial and temporal datasets to improve zoonotic disease surveillance workflows.</span>
+          <span class="zh">开发基于GIS的动物健康监测平台，实现数据上传、管理与地理可视化；整合时空数据集，优化人畜共患病监测工作流。</span>
+        </li>
+        <li>
+          <span class="en">Produced thematic maps and visual products for the IAEA General Conference and annual reports; drafted project progress reports highlighting best practices and impact.</span>
+          <span class="zh">为IAEA大会及年报制作专题地图与可视化产品，撰写项目进展报告并提炼最佳实践与成效。</span>
+        </li>
+        <li>
+          <span class="en">Developed and delivered GIS training materials for agricultural and veterinary applications.</span>
+          <span class="zh">开发并讲授面向农业与兽医应用的GIS培训材料。</span>
+        </li>
       </ul>
     </div>
 
     <!-- UNESCO -->
     <div class="exp-item">
       <div class="exp-header">
-        <div class="exp-org">UNESCO – WHITRAP</div>
+        <div class="exp-org">
+          <span class="en">UNESCO – WHITRAP</span>
+          <span class="zh">UNESCO – 世界遗产研究培训亚太区域中心（WHITRAP）</span>
+        </div>
         <div class="exp-date">12/2022 – 04/2023</div>
       </div>
-      <div class="exp-role">Research Assistant — Climate Change & Heritage Conservation</div>
-      <div class="exp-location">Remote (Sweden-based)</div>
+      <div class="exp-role">
+        <span class="en">Research Assistant — Climate Change & Heritage Conservation</span>
+        <span class="zh">研究助理 — 气候变化与遗产保护</span>
+      </div>
+      <div class="exp-location">
+        <span class="en">Remote (Sweden-based)</span>
+        <span class="zh">远程（瑞典）</span>
+      </div>
       <ul class="exp-bullets">
-        <li>Contributed to the Metropolitan Heritage Project; assessed climate change impacts on heritage conservation using AI and geospatial methods. Prepared literature reviews and research reports for project stakeholders.</li>
+        <li>
+          <span class="en">Contributed to the Metropolitan Heritage Project; assessed climate change impacts on heritage conservation using AI and geospatial methods. Prepared literature reviews and research reports for project stakeholders.</span>
+          <span class="zh">参与大都市遗产项目，运用AI与地理空间方法评估气候变化对遗产保护的影响，为项目相关方撰写文献综述与研究报告。</span>
+        </li>
       </ul>
     </div>
 
@@ -364,33 +474,51 @@
 
   <!-- EDUCATION -->
   <div class="section">
-    <div class="section-label">Education</div>
+    <div class="section-label"><span class="en">Education</span><span class="zh">教育背景</span></div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <div class="edu-school">Peking University</div>
+        <div class="edu-school"><span class="en">Peking University</span><span class="zh">北京大学</span></div>
         <div class="edu-date">09/2021 – 07/2024</div>
       </div>
-      <div class="edu-degree">MSc in Geography — GPA 3.74/4.0, with distinction</div>
-      <div class="edu-detail">WebGIS; Python; Machine Learning (Matlab); Big Data Analysis (ArcGIS); Quantitative Methods; Land Use and Policy</div>
+      <div class="edu-degree">
+        <span class="en">MSc in Geography — GPA 3.74/4.0, with distinction</span>
+        <span class="zh">地理学理学硕士 — GPA 3.74/4.0，优异</span>
+      </div>
+      <div class="edu-detail">
+        <span class="en">WebGIS; Python; Machine Learning (Matlab); Big Data Analysis (ArcGIS); Quantitative Methods; Land Use and Policy</span>
+        <span class="zh">WebGIS；Python；机器学习（Matlab）；大数据分析（ArcGIS）；定量研究方法；土地利用与政策</span>
+      </div>
     </div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <div class="edu-school">Stockholm University</div>
+        <div class="edu-school"><span class="en">Stockholm University</span><span class="zh">斯德哥尔摩大学</span></div>
         <div class="edu-date">09/2022 – 03/2023</div>
       </div>
-      <div class="edu-degree">Exchange Program</div>
-      <div class="edu-detail">Human Geography · Communication · Globalisation and Strategy</div>
+      <div class="edu-degree">
+        <span class="en">Exchange Program</span>
+        <span class="zh">交流项目</span>
+      </div>
+      <div class="edu-detail">
+        <span class="en">Human Geography · Communication · Globalisation and Strategy</span>
+        <span class="zh">人文地理 · 传播学 · 全球化与战略</span>
+      </div>
     </div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <div class="edu-school">Beijing Forestry University</div>
+        <div class="edu-school"><span class="en">Beijing Forestry University</span><span class="zh">北京林业大学</span></div>
         <div class="edu-date">09/2017 – 07/2021</div>
       </div>
-      <div class="edu-degree">BSc in Forestry (Urban Forestry) — GPA 91.22/100, with distinction</div>
-      <div class="edu-detail">Mathematical Statistics (Python; R) · Urban Ecology · Forest Ecology · Landscape Ecology · Remote Sensing and GIS</div>
+      <div class="edu-degree">
+        <span class="en">BSc in Forestry (Urban Forestry) — GPA 91.22/100, with distinction</span>
+        <span class="zh">林学理学学士（城市林业方向）— GPA 91.22/100，优异</span>
+      </div>
+      <div class="edu-detail">
+        <span class="en">Mathematical Statistics (Python; R) · Urban Ecology · Forest Ecology · Landscape Ecology · Remote Sensing and GIS</span>
+        <span class="zh">数理统计（Python；R）· 城市生态学 · 森林生态学 · 景观生态学 · 遥感与GIS</span>
+      </div>
     </div>
   </div>
 
@@ -398,31 +526,31 @@
 
   <!-- SKILLS -->
   <div class="section">
-    <div class="section-label">Skills</div>
+    <div class="section-label"><span class="en">Skills</span><span class="zh">专业技能</span></div>
     <div class="skills-grid">
       <div class="skill-row">
-        <div class="skill-cat">GIS & Spatial</div>
+        <div class="skill-cat"><span class="en">GIS & Spatial</span><span class="zh">GIS与空间分析</span></div>
         <div class="skill-val">ArcGIS, QGIS, WebGIS, Leaflet, PostGIS, CartoDB</div>
       </div>
       <div class="skill-row">
-        <div class="skill-cat">Programming</div>
+        <div class="skill-cat"><span class="en">Programming</span><span class="zh">编程语言</span></div>
         <div class="skill-val">Python, R, JavaScript, SQL, Matlab</div>
       </div>
       <div class="skill-row">
-        <div class="skill-cat">AI & ML</div>
+        <div class="skill-cat"><span class="en">AI & ML</span><span class="zh">AI与机器学习</span></div>
         <div class="skill-val">LightGBM, AI Agent design, NLP pipelines, SHAP/LIME</div>
       </div>
       <div class="skill-row">
-        <div class="skill-cat">Data & Remote Sensing</div>
+        <div class="skill-cat"><span class="en">Data & Remote Sensing</span><span class="zh">数据与遥感</span></div>
         <div class="skill-val">NASA Black Marble, satellite imagery, CRS, raster analysis</div>
       </div>
       <div class="skill-row">
-        <div class="skill-cat">Systems & Platforms</div>
+        <div class="skill-cat"><span class="en">Systems & Platforms</span><span class="zh">系统与平台</span></div>
         <div class="skill-val">CRM · LMS · RMS · Formspree · ArcGIS Online</div>
       </div>
       <div class="skill-row">
-        <div class="skill-cat">Cartography</div>
-        <div class="skill-val">Thematic mapping, symbology, heatmaps, animations, map publishing</div>
+        <div class="skill-cat"><span class="en">Cartography</span><span class="zh">制图学</span></div>
+        <div class="skill-val"><span class="en">Thematic mapping, symbology, heatmaps, animations, map publishing</span><span class="zh">专题制图、符号系统、热力图、动态地图、地图发布</span></div>
       </div>
     </div>
   </div>
@@ -431,21 +559,39 @@
 
   <!-- ACHIEVEMENTS -->
   <div class="section">
-    <div class="section-label">Selected Achievements</div>
+    <div class="section-label"><span class="en">Selected Achievements</span><span class="zh">主要成就</span></div>
 
     <div class="ach-item">
-      <div class="ach-title">First Prize — European Cartographic Conference 2024 (EuroCarto)</div>
-      <div class="ach-desc">Regional resilience assessment using NASA Black Marble NTL data; patented dynamic pattern recognition method combining LightGBM and interpretable AI (SHAP).</div>
+      <div class="ach-title">
+        <span class="en">First Prize — European Cartographic Conference 2024 (EuroCarto)</span>
+        <span class="zh">2024年欧洲制图大会（EuroCarto）一等奖</span>
+      </div>
+      <div class="ach-desc">
+        <span class="en">Regional resilience assessment using NASA Black Marble NTL data; patented dynamic pattern recognition method combining LightGBM and interpretable AI (SHAP).</span>
+        <span class="zh">利用NASA Black Marble夜间灯光数据进行区域韧性评估，结合LightGBM与可解释AI（SHAP）的动态模式识别方法已申请专利。</span>
+      </div>
     </div>
 
     <div class="ach-item">
-      <div class="ach-title">Two SCI Q1 papers under review</div>
-      <div class="ach-desc">Machine learning and interpretable AI applied to spatio-temporal disaster recovery analysis; non-linear socio-environmental factor identification.</div>
+      <div class="ach-title">
+        <span class="en">Two SCI Q1 papers under review</span>
+        <span class="zh">两篇SCI Q1期刊论文审稿中</span>
+      </div>
+      <div class="ach-desc">
+        <span class="en">Machine learning and interpretable AI applied to spatio-temporal disaster recovery analysis; non-linear socio-environmental factor identification.</span>
+        <span class="zh">机器学习与可解释AI应用于时空灾后恢复分析；社会环境因子非线性识别研究。</span>
+      </div>
     </div>
 
     <div class="ach-item">
-      <div class="ach-title">Published — Journal of Chinese Urban Forestry, 2020, 18(03)</div>
-      <div class="ach-desc">Green View Index analysis along Beijing Central Axis using street view imagery and GIS. Awarded RMB 10,000 research funding and Excellent Graduation Thesis.</div>
+      <div class="ach-title">
+        <span class="en">Published — Journal of Chinese Urban Forestry, 2020, 18(03)</span>
+        <span class="zh">已发表 — 中国城市林业杂志，2020，18(03)</span>
+      </div>
+      <div class="ach-desc">
+        <span class="en">Green View Index analysis along Beijing Central Axis using street view imagery and GIS. Awarded RMB 10,000 research funding and Excellent Graduation Thesis.</span>
+        <span class="zh">基于街景影像与GIS的北京中轴线绿视率分析，获1万元科研经费资助及优秀毕业论文奖。</span>
+      </div>
     </div>
   </div>
 
@@ -453,23 +599,37 @@
 
   <!-- LANGUAGES -->
   <div class="section">
-    <div class="section-label">Languages</div>
+    <div class="section-label"><span class="en">Languages</span><span class="zh">语言能力</span></div>
     <div class="lang-row">
       <div class="lang-item">
-        <div class="lang-name">Chinese</div>
-        <div class="lang-level">Native</div>
+        <div class="lang-name"><span class="en">Chinese</span><span class="zh">中文</span></div>
+        <div class="lang-level"><span class="en">Native</span><span class="zh">母语</span></div>
       </div>
       <div class="lang-item">
-        <div class="lang-name">English</div>
-        <div class="lang-level">Professional</div>
+        <div class="lang-name"><span class="en">English</span><span class="zh">英语</span></div>
+        <div class="lang-level"><span class="en">Professional</span><span class="zh">职业水平</span></div>
       </div>
       <div class="lang-item">
-        <div class="lang-name">German</div>
-        <div class="lang-level">Basic</div>
+        <div class="lang-name"><span class="en">German</span><span class="zh">德语</span></div>
+        <div class="lang-level"><span class="en">Basic</span><span class="zh">基础</span></div>
       </div>
     </div>
   </div>
 
 </div>
+
+<script>
+function toggleLang() {
+  const html = document.documentElement
+  const btn  = document.getElementById('lang-btn')
+  if (html.lang === 'en') {
+    html.lang = 'zh'
+    btn.textContent = 'English'
+  } else {
+    html.lang = 'en'
+    btn.textContent = '中文'
+  }
+}
+</script>
 </body>
 </html>
