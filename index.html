@@ -1003,6 +1003,57 @@ img.leaflet-tile { box-shadow: none !important; margin: 0 !important; }
 }
 .contact-submit:hover::after { transform: translateX(270%); }
 
+
+/* ══ Unified typography & line cleanup (gallery style) ══
+   Titles: Cormorant Garamond · Text: DM Sans */
+:root { --f-title: 'Cormorant Garamond', Georgia, serif; --f-text: 'DM Sans', 'Helvetica Neue', Arial, sans-serif; }
+body { font-family: var(--f-text); font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+/* Page titles */
+.places-header-title, .section-title, .experience-hero-title {
+  font-family: var(--f-title) !important; font-weight: 300 !important;
+  font-size: clamp(2.2rem, 3.6vw, 3rem) !important; line-height: 1.15; letter-spacing: -0.01em;
+}
+/* Sub-section titles (inline-styled) */
+div[style*="Cormorant"] {
+  font-family: var(--f-title) !important; font-weight: 400 !important;
+  font-size: clamp(1.6rem, 2.4vw, 1.9rem) !important; line-height: 1.2;
+}
+/* Card / item titles */
+.place-card-name, .timeline-role, .project-name, .interest-title, .recognition-row-title {
+  font-family: var(--f-title) !important; font-weight: 500 !important;
+  font-size: 1.35rem !important; line-height: 1.3; letter-spacing: 0 !important;
+}
+/* Body text */
+.about-text, .timeline-desc, .project-desc, .contact-p, .section-sub, .places-header-sub,
+.interest-desc, .curiosity-item, .about-quote, .hero-tagline {
+  font-family: var(--f-text) !important; font-size: 1rem !important; line-height: 1.75 !important;
+}
+.about-quote { font-style: italic; }
+.hero-tagline { font-size: 1.05rem !important; }
+/* Secondary text */
+.place-card-meta, .timeline-location, .project-outcome, .contact-langs, .contact-secondary-link,
+.about-hero-title, .filter-tab, .timeline-year {
+  font-family: var(--f-text) !important; font-size: 0.875rem !important; line-height: 1.6;
+}
+/* Labels / eyebrows / tags */
+.hero-eyebrow, .hero-now, .hero-cities, .hero-scroll, .section-eyebrow, .places-header-eyebrow,
+.experience-hero-eyebrow, .contact-eyebrow, .contact-label, .timeline-org, .project-type,
+.place-type-badge, .recognition-row-org, .timeline-tag, .project-tag, .project-link-btn,
+.resume-btn, .theme-toggle, .lang-toggle, .contact-footer span {
+  font-family: var(--f-text) !important; font-size: 0.75rem !important; letter-spacing: 0.1em;
+}
+.timeline-tag, .project-tag, .project-link-btn { letter-spacing: 0.02em; }
+
+/* Remove unnecessary lines */
+.nav, .filter-tabs, .place-card, .place-card-info, .about-portrait-wrap, .interests-grid,
+.interest-card, .curiosity-item, .project-card, .project-card-img, .project-outcome,
+.recognition-row, .contact-footer, .reveal[style*="border-top"] { border: none !important; }
+.hero-divider, .about-divider { display: none !important; }
+.timeline-tag { background: rgba(var(--accent-rgb),0.06); }
+.interests-grid { gap: 2rem; }
+.interest-card { padding: 0 !important; }
+.curiosity-item { padding: 0.45rem 0 !important; }
 </style>
 </head>
 <body>
@@ -1320,11 +1371,11 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
     if (!mapInstanceRef.current) return;
     if (tileLayerRef.current) mapInstanceRef.current.removeLayer(tileLayerRef.current);
     const url = darkMode
-      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+      ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+      : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
     tileLayerRef.current = L.tileLayer(url, {
-      attribution: '© OpenStreetMap contributors © CARTO',
-      subdomains: 'abcd', maxZoom: 20,
+      attribution: '© Esri',
+      maxZoom: 16,
     }).addTo(mapInstanceRef.current);
   }, [darkMode]);
 
@@ -1337,11 +1388,11 @@ function LeafletMap({ onMarkerClick, compact, darkMode }) {
     });
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     const initUrl = darkMode
-      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+      ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+      : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
     tileLayerRef.current = L.tileLayer(initUrl, {
-      attribution: '© OpenStreetMap contributors © CARTO',
-      subdomains: 'abcd', maxZoom: 20,
+      attribution: '© Esri',
+      maxZoom: 16,
     }).addTo(map);
 
     const byId = {};
