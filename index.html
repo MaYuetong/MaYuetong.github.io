@@ -1054,6 +1054,22 @@ div[style*="Cormorant"] {
 .interests-grid { gap: 2rem; }
 .interest-card { padding: 0 !important; }
 .curiosity-item { padding: 0.45rem 0 !important; }
+
+/* Seamless hero: nav floats over the map with no band or edge */
+.nav.nav-glass, .nav.nav-glass.day-mode {
+  background: transparent !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border-bottom-color: transparent !important;
+}
+.nav.nav-glass.day-mode .resume-btn { border-color: rgba(0,0,0,0.18); color: var(--secondary); }
+.nav.nav-glass.day-mode .resume-btn:hover { border-color: var(--black); color: var(--black); background: transparent; }
+/* Map backdrop matches tile tone so sub-pixel tile seams stay invisible */
+.hero-map-wrap.light-tiles .leaflet-container { background: #D8D8D8; }
+.hero-map-wrap.dark-tiles .leaflet-container { background: #2B2A2E; }
+/* Page headers blend into the white nav: no tinted band */
+.about-hero, .experience-hero, .projects-hero, .places-header { background: var(--white) !important; }
+/* Contact: nav takes the page's dark tone */
+.nav.nav-glass.on-dark { background: transparent !important; }
 </style>
 </head>
 <body>
@@ -1105,7 +1121,7 @@ const places = [
     id: 'vienna', name: 'Vienna', country: 'Austria',
     coordinates: [48.2082, 16.3738], years: '2024 – now', type: 'work',
     img: 'places/vienna-cover.jpg', modalImg: 'places/vienna2.gif',
-    subtitle: 'IAEA Consultant — Epidemiological Analysis & Visualisation Systems',
+    subtitle: 'IAEA Consultant — ZODIAC Platform',
     tooltipSummary: 'IAEA Consultant, ZODIAC platform front-end, UI/UX & data systems (Sep 2026 – now) · IAEA/FAO Joint Centre, Trainee: WebGIS Developer & Data Analyst (Jan 2024 – Dec 2024) · Built GIS animal health monitoring platform · Maps for IAEA General Conference & annual reports · EuroCarto 2024 First Prize',
     memory: 'Vienna was my first full international professional posting. At the IAEA/FAO Joint Centre I developed a GIS-based animal health monitoring platform, produced thematic maps for the IAEA General Conference, and delivered GIS training materials for agricultural and veterinary applications. In September 2026 I came back to Vienna as an IAEA Consultant, leading front-end development and UI/UX design for the ZODIAC platform, so field veterinary officers, laboratory officers and veterinary authorities can work in one shared system.',
     learned: 'International scientific standards, GIS platform development for institutional use, thematic cartography for policy audiences, zoonotic disease surveillance workflows, working within the UN system.',
@@ -1958,10 +1974,10 @@ function App() {
   const [showBanner, setShowBanner] = useState(() => detectLang() === 'zh');
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('yt-dark-mode');
-    return saved !== null ? saved === 'true' : true;
+    const saved = localStorage.getItem('yt-dark-mode-v2');
+    return saved !== null ? saved === 'true' : false;
   });
-  const toggleTheme = () => setDarkMode(d => { const next = !d; localStorage.setItem('yt-dark-mode', String(next)); return next; });
+  const toggleTheme = () => setDarkMode(d => { const next = !d; localStorage.setItem('yt-dark-mode-v2', String(next)); return next; });
 
   /* ── Custom cursor ── */
   useEffect(() => {
@@ -2013,7 +2029,7 @@ function App() {
   }, [page]);
 
   useEffect(() => {
-    setNavGlass(page === 'places');
+    setNavGlass(page === 'places' || page === 'contact');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setMenuOpen(false);
   }, [page]);
@@ -2036,7 +2052,7 @@ function App() {
   return (
     <>
       <div className="scroll-progress-bar" style={{ width: `${scrollPct}%` }} />
-      <nav className={'nav' + (navGlass ? ' nav-glass' : '') + (navGlass && !darkMode ? ' day-mode' : '')}>
+      <nav className={'nav' + (navGlass ? ' nav-glass' : '') + (navGlass && !darkMode && page !== 'contact' ? ' day-mode' : '') + (page === 'contact' ? ' on-dark' : '')}>
         <ul className="nav-links">
           {navPages.map(p => (
             <li key={p.id} className={'nav-link' + (page === p.id ? ' active' : '')}
