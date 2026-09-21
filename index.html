@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Yuetong Ma — Spatial Intelligence & AI Systems</title>
-<meta name="description" content="Yuetong Ma — Geopolitical Analyst & GIS Researcher. UN Secretariat (UNOCC/DPO), IAEA, Peking University. Spatial intelligence, AI systems, cartography." />
+<meta name="description" content="Yuetong Ma — IAEA Consultant, GIS Researcher & Geopolitical Analyst. IAEA, UN Secretariat (UNOCC/DPO), Peking University. Spatial intelligence, AI systems, cartography." />
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://mayuetong.github.io/" />
@@ -1103,11 +1103,11 @@ const places = [
   },
   {
     id: 'vienna', name: 'Vienna', country: 'Austria',
-    coordinates: [48.2082, 16.3738], years: '2024 – 2025', type: 'work',
+    coordinates: [48.2082, 16.3738], years: '2024 – now', type: 'work',
     img: 'places/vienna-cover.jpg', modalImg: 'places/vienna2.gif',
-    subtitle: 'IAEA Trainee — WebGIS & Data Analysis',
-    tooltipSummary: 'IAEA/FAO Joint Centre, Trainee: WebGIS Developer & Data Analyst (Jan 2024 – Jan 2025) · Built GIS animal health monitoring platform · Maps for IAEA General Conference & annual reports · EuroCarto 2024 First Prize',
-    memory: 'Vienna was my first full international professional posting. At the IAEA/FAO Joint Centre I developed a GIS-based animal health monitoring platform, produced thematic maps for the IAEA General Conference, and delivered GIS training materials for agricultural and veterinary applications.',
+    subtitle: 'IAEA Consultant — Epidemiological Analysis & Visualisation Systems',
+    tooltipSummary: 'IAEA Consultant, ZODIAC platform front-end, UI/UX & data systems (Sep 2026 – now) · IAEA/FAO Joint Centre, Trainee: WebGIS Developer & Data Analyst (Jan 2024 – Dec 2024) · Built GIS animal health monitoring platform · Maps for IAEA General Conference & annual reports · EuroCarto 2024 First Prize',
+    memory: 'Vienna was my first full international professional posting. At the IAEA/FAO Joint Centre I developed a GIS-based animal health monitoring platform, produced thematic maps for the IAEA General Conference, and delivered GIS training materials for agricultural and veterinary applications. In September 2026 I came back to Vienna as an IAEA Consultant, leading front-end development and UI/UX design for the ZODIAC platform, so field veterinary officers, laboratory officers and veterinary authorities can work in one shared system.',
     learned: 'International scientific standards, GIS platform development for institutional use, thematic cartography for policy audiences, zoonotic disease surveillance workflows, working within the UN system.',
     gradient: 'linear-gradient(135deg, #2A3040 0%, #3A4060 100%)'
   },
@@ -1123,11 +1123,11 @@ const places = [
   },
   {
     id: 'nyc', name: 'New York', country: 'United States',
-    coordinates: [40.7128, -74.0060], years: '2025 – 2026', type: 'work',
+    coordinates: [40.7128, -74.0060], years: '2026', type: 'work',
     img: 'other/newyork.jpg',
     subtitle: 'UN Secretariat — AI & GIS for Peace Operations',
-    tooltipSummary: 'UNOCC Geopolitical Analyst, UN Trainee (Nov 2025 – May 2026) · AI Agent system for geospatial intelligence · Automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks',
-    memory: 'At the UN Secretariat\'s UNOCC I\'m designing AI-powered systems that translate unstructured geopolitical requests into executable GIS tasks — building the bridge between natural language and spatial intelligence at scale.',
+    tooltipSummary: 'UNOCC Geopolitical Information Analyst (Feb 2026 – Jul 2026) · Open-source analysis on Security Council agenda items · AI-assisted pipeline turning recurring information requirements into executable GIS operations',
+    memory: 'At the UN Secretariat\'s UNOCC I designed AI-assisted systems that translate unstructured geopolitical requests into executable GIS tasks — building the bridge between natural language and spatial intelligence at scale.',
     learned: 'AI agent system design, NLP-to-GIS pipeline architecture, geopolitical analysis, working at the frontier of AI and geographic information systems within the UN system.',
     gradient: 'linear-gradient(135deg, #162035 0%, #243050 100%)'
   },
@@ -1143,10 +1143,10 @@ const places = [
   },
   {
     id: 'shenzhen', name: 'Shenzhen', country: 'China',
-    coordinates: [22.5431, 114.0579], years: '2025 – 2026', type: 'work',
+    coordinates: [22.5431, 114.0579], years: '2024 – 2026', type: 'work',
     img: 'other/shenzhen.jpg',
     subtitle: 'DJI Innovation — Product Manager',
-    tooltipSummary: 'DJI Product Manager, Technical Service Solutions (Feb 2025 – Mar 2026) · Service automation 0% → 75% · AI Agent-based service platform · North America logistics optimization: estimated −30% cost reduction',
+    tooltipSummary: 'DJI Product Manager, Technical Service Solutions (Dec 2024 – Feb 2026) · Service automation 0% → 75% · AI Agent-based service platform · North America logistics optimization: estimated −30% cost reduction',
     memory: 'DJI is where I brought spatial thinking and systems analysis into a commercial context at scale. Leading automated service workflow design, contributing to an AI Agent service platform, and building multi-objective optimization models for logistics networks.',
     learned: 'Product management, enterprise systems (CRM/LMS/RMS), AI-human service workflow design, multi-objective logistics optimization, commercial operations at scale.',
     gradient: 'linear-gradient(135deg, #20202A 0%, #302840 100%)'
@@ -1225,16 +1225,25 @@ function OrgLogo({ logoKey, orgName }) {
 
 const experiences = [
   {
-    year: '2025–2026',
+    year: '2026–now',
+    logoKey: 'iaea',
+    org: 'International Atomic Energy Agency (IAEA)',
+    role: 'Consultant — Development of Epidemiological Analysis and Visualisation Systems',
+    location: 'Vienna, Austria',
+    desc: 'Lead front-end development and UI/UX design for the Zoonotic Diseases Integrated Action (ZODIAC) platform, a flagship initiative under the Animal Production and Health (APH) Section, with unified workflows for Field Veterinary Officers, Laboratory Officers and Veterinary Authorities. Develop secure, scalable backend database architecture, data models, services and APIs, and coordinate user testing across member states. Produce technical documentation and work in agile teams with developers, quality engineers, infrastructure and security specialists.',
+    tags: ['Front-end', 'UI/UX', 'APIs & Data Models', 'ZODIAC', 'Epidemiological Visualisation'],
+  },
+  {
+    year: '2026',
     logoKey: 'un',
     org: 'UN Secretariat — Dept. of Peace Operations (DPO), UNOCC',
-    role: 'Geopolitical Analyst (UN Trainee)',
+    role: 'Geopolitical Information Analyst',
     location: 'New York, USA (Hybrid)',
-    desc: 'Designed an AI Agent-based system to automatically identify geospatial information needs related to peace and political affairs. Developed an automated demand–task–operation pipeline converting unstructured requests into executable GIS tasks.',
+    desc: 'Collected and analysed open-source geopolitical information on Security Council agenda items, converting unstructured reporting into structured analytical tasks. Designed an AI-assisted pipeline that translates recurring information requirements into executable GIS operations (QGIS, ArcGIS Pro), shortening the response time for new analytical requests.',
     tags: ['AI Agents', 'GIS Automation', 'Geopolitical Analysis', 'NLP', 'UN System'],
   },
   {
-    year: '2025–2026',
+    year: '2024–2026',
     logoKey: 'dji',
     org: 'DJI Innovation (Shenzhen DJI Sciences and Technologies Ltd.)',
     role: 'Product Manager — Technical Service Solutions',
@@ -1252,7 +1261,7 @@ const experiences = [
     tags: ['GIS Training', 'Open-source Tools', 'Disease Mapping', 'IAEA Standards', 'Technical Documentation'],
   },
   {
-    year: '2024–2025',
+    year: '2024',
     logoKey: 'iaea',
     org: 'IAEA / FAO Joint Centre',
     role: 'Trainee — WebGIS Developer & Data Analyst / Project Assistant',
@@ -1319,6 +1328,7 @@ const projects = [
 ];
 
 const recognitions = [
+  { icon: '', title: 'Young Cartographer Award — International Cartographic Association', org: 'EuroCarto 2026, Brno', detail: 'Awarded at the European Cartographic Conference 2026 for research on institutional memory and human–AI cartographic quality assurance.' },
   { icon: '', title: 'National Scholarship (本科国家奖学金)', org: 'Ministry of Education, China', detail: 'Top 1% nationally — the highest honour for undergraduate students in China\'s state scholarship system. Awarded at Beijing Forestry University.' },
   { icon: '', title: 'First Prize — European Cartographic Conference 2024', org: 'EuroCarto, Vienna', detail: 'International competitive award for regional disaster resilience research using NASA Black Marble NTL data and LightGBM interpretable AI.' },
   { icon: '', title: 'IAEA Expert Mission — Regional GIS Training', org: 'IAEA / FAO, Pakistan (Aug 2025)', detail: 'Independently designed and delivered a multi-country expert training for government officials from the Middle East, Africa, and Southeast Asia. End-of-mission report filed to IAEA HQ.' },
@@ -1541,12 +1551,12 @@ function PlacesPage({ setPage, lang = 'en', darkMode = true }) {
           background: 'linear-gradient(to top right, rgba(253,249,245,0.82) 0%, rgba(253,249,245,0.22) 42%, transparent 65%), linear-gradient(180deg, rgba(253,249,245,0.42) 0%, transparent 18%)'
         }} />
         <div className="hero-content" ref={contentRef}>
-          <div className="hero-now" style={!darkMode ? {color:'rgba(30,20,25,0.5)'} : {}}>{lang === 'zh' ? '当前 · 纽约 · 构建空间智能系统' : 'Currently in New York · Building spatial intelligence systems'}</div>
+          <div className="hero-now" style={!darkMode ? {color:'rgba(30,20,25,0.5)'} : {}}>{lang === 'zh' ? '当前 · 维也纳 · IAEA · 构建流行病分析与可视化系统' : 'Currently in Vienna · IAEA · Building epidemiological analysis & visualisation systems'}</div>
           <div className="hero-eyebrow" style={!darkMode ? {color:'var(--accent)'} : {}}>{lang === 'zh' ? '空间分析与可视化 · GIS研究 · AI与人共生' : 'Spatial Analysis & Visualisation · GIS Research · Human–AI Symbiosis'}</div>
           <h1 className="hero-name" style={!darkMode ? {color:'var(--black)'} : {}}><ScrambleText text="Yuetong" /><br /><em>Ma</em></h1>
           <div className="hero-divider" />
           <p className="hero-tagline" style={!darkMode ? {color:'rgba(30,20,25,0.58)'} : {}}>{T[lang].hero.tagline}</p>
-          <div className="hero-cities" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}}>New York · Vienna · Faisalabad · Shenzhen · Beijing · Stockholm</div>
+          <div className="hero-cities" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}}>Vienna · New York · Faisalabad · Shenzhen · Beijing · Stockholm</div>
         </div>
         <div className="hero-scroll" style={!darkMode ? {color:'rgba(30,20,25,0.38)'} : {}} onClick={scrollDown}>
           <div className="hero-scroll-arrow">↓</div>
@@ -1834,7 +1844,7 @@ function ContactPage({ lang = 'en' }) {
       </div>
       <div className="contact-footer">
         <span>Yuetong Ma — GIS Researcher &amp; Geopolitical Analyst</span>
-        <span>New York · Vienna · Shenzhen · 2026</span>
+        <span>Vienna · New York · Shenzhen · 2026</span>
       </div>
     </div>
   );
@@ -1852,9 +1862,9 @@ const T = {
     langToggle: '中文', banner: 'Your browser is set to Chinese — switch to 中文?', bannerBtn: 'Switch', bannerDismiss: 'Keep English',
     hero: { eyebrow:'Geopolitical Analyst · GIS Researcher · AI Systems', tagline:'Building spatial intelligence at the intersection of AI, cartography, and crisis response', placesHeader:'My Journey in Places', placesSub:'Six cities across four continents. Hover markers for a summary · click to read the full story.', filterAll:'All', filterEdu:'Education', filterWork:'Work' },
     about: {
-      heroTitle:'GIS Researcher · Geopolitical Analyst · Product Manager',
+      heroTitle:'IAEA Consultant · GIS Researcher · Geopolitical Analyst',
       quote:'A map is never just geography. It is a choice — about what exists, what connects, and what a civilization decides to remember.',
-      p1:"I'm Yuetong Ma — geographer, cartographer, and crisis information analyst. MSc in Geography from Peking University (GPA 3.74, distinction); field experience at the UN Secretariat in New York, IAEA/FAO Joint Centre in Vienna, and UNESCO in Stockholm. For me, every cartographic choice — scale, boundary, color — is an argument about what a civilization decides to remember.",
+      p1:"I'm Yuetong Ma — geographer, cartographer, and crisis information analyst. MSc in Geography from Peking University (GPA 3.74, distinction); currently a Consultant at the IAEA in Vienna, with earlier work at the UN Secretariat in New York, the IAEA/FAO Joint Centre in Vienna, and UNESCO in Stockholm. For me, every cartographic choice — scale, boundary, color — is an argument about what a civilization decides to remember.",
       p2:"My research draws on an MSc from Peking University and a BSc from Beijing Forestry University, and orbits two intertwined subjects: disasters and conflict. Disasters — typhoons, zoonotic outbreaks, cascading crises — expose where systems are fragile and where communities endure. Conflict is the other lens: between nations, between peoples, between human activity and the natural world. To understand how the world might become more peaceful and inclusive, you first have to study how and why it breaks. That is where my maps begin.",
       p3:"Beyond data, I founded Silora Orient — a personal brand at the intersection of Eastern aesthetics and contemporary design. Through traditional Chinese 缠花 (chánhuā) silk ornaments and creative work, I explore how ancient craft and visual tradition speak across cultures. This practice sharpens how I read both Eastern and European visual languages, and quietly informs every cartographic choice I make.",
       p4:"",
@@ -1870,9 +1880,9 @@ const T = {
     langToggle: 'EN', banner: '检测到您使用中文浏览器，是否切换至中文版？', bannerBtn: '切换', bannerDismiss: '保持英文',
     hero: { eyebrow:'地缘政治分析师 · GIS研究员 · AI系统', tagline:'在人工智能、制图学与危机响应的交汇处，构建空间智能', placesHeader:'我的足迹', placesSub:'跨越四大洲的六座城市。悬停标记查看概览，点击阅读完整故事。', filterAll:'全部', filterEdu:'教育', filterWork:'工作' },
     about: {
-      heroTitle:'GIS研究员 · 地缘政治分析师 · 产品经理',
+      heroTitle:'IAEA顾问 · GIS研究员 · 地缘政治分析师',
       quote:'地图从来不只是地理。它是一种选择——关于什么存在、什么相连，以及一个文明决定记住什么。',
-      p1:'我是马玥桐——地理学家、制图师与危机信息分析师。北京大学地理学硕士（GPA 3.74，优异毕业），曾就职于纽约联合国秘书处、维也纳IAEA/FAO联合中心及斯德哥尔摩联合国教科文组织。对我而言，每一个制图选择——比例尺、边界、色彩——都是关于文明选择记住什么的论断。',
+      p1:'我是马玥桐——地理学家、制图师与危机信息分析师。北京大学地理学硕士（GPA 3.74，优异毕业），现任维也纳国际原子能机构（IAEA）顾问，曾就职于纽约联合国秘书处、维也纳IAEA/FAO联合中心及斯德哥尔摩联合国教科文组织。对我而言，每一个制图选择——比例尺、边界、色彩——都是关于文明选择记住什么的论断。',
       p2:'我的学术积淀来自北京大学地理学硕士与北京林业大学理学学士，研究始终围绕两个彼此交织的主题：灾害与冲突。灾害——台风、人畜共患病疫情、连锁危机——揭示系统的脆弱之处与社区的韧性所在。冲突则是另一面镜子：国家之间、人与人之间、人类活动与自然世界之间的冲突。要理解世界如何才能走向和平与包容，必须先研究它为何以及如何破裂。这正是我的地图开始的地方。',
       p3:'数据之外，我创立了个人品牌「Silora Orient」——以东方美学与当代设计为交汇点。通过传统缠花丝织饰品与创意设计，探索古老手工艺与视觉传统如何跨文化对话。这一实践磨砺了我对东西方视觉语言的感知，也渗透进我每一次制图的选择之中。',
       p4:'',
